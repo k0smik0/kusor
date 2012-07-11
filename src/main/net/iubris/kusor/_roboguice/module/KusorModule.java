@@ -19,7 +19,6 @@
  ******************************************************************************/
 package net.iubris.kusor._roboguice.module;
 
-import net.iubris.kusor.LocationObservableProvider;
 import net.iubris.kusor._roboguice.provider.LocatorSettingsProvider;
 import net.iubris.kusor._roboguice.provider.annotations.LocationUpdateActionAnnotation;
 import net.iubris.kusor._roboguice.provider.annotations.PackageNameAnnotation;
@@ -66,7 +65,7 @@ public class KusorModule extends AbstractModule {
 		//}
 		bind(LocatorSettings.class).toProvider(LocatorSettingsProvider.class);
 		bind(KLocator.class).asEagerSingleton();
-		bind(LocationObservableProvider.class).to(KLocator.class);		
+		//bind(LocationObservableProvider.class).to(KLocator.class);		
 	}
 
 }

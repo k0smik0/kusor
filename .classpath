@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/core"/>
-	<classpathentry excluding="net/iubris/kusor/utils/LocationUtils.java" kind="src" path="src/roboguice"/>
+	<classpathentry excluding="net/iubris/kusor/utils/LocationUtils.java" kind="src" path="src/main"/>
+	<classpathentry kind="src" path="src/kusor4diane"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/roboguice"/>
+	<classpathentry excluding="net/iubris/kusor/LocationObservableProvider.java|net/iubris/kusor/observatory/observable/LocationObservable.java|net/iubris/kusor/observatory/observer/LocationObserver.java|net/iubris/kusor/provider/LocationProvider.java|net/iubris/kusor/updater/LocationUpdater.java" kind="src" path="src/super"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/epicurus"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

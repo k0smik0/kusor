@@ -19,11 +19,6 @@
  ******************************************************************************/
 package net.iubris.kusor.locator;
 
-import net.iubris.epicurus.observer.action.INotificationAction;
-import net.iubris.kusor.LocationObservableProvider;
-import net.iubris.kusor.observatory.observable.KlocatorObservableSyncObservableDelegate;
-import net.iubris.kusor.observatory.observer.LocationObserver;
-import net.iubris.kusor.updater.LocationUpdater;
 import roboguice.util.Ln;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -38,25 +33,25 @@ import com.novoda.location.LocatorFactory;
 import com.novoda.location.LocatorSettings;
 import com.novoda.location.exception.NoProviderAvailable;
 
-public class KLocator implements LocationObservableProvider, LocationUpdater {
+public class KLocator /* implements LocationObservable, LocationProvider, LocationUpdater */{
 	
-	private final LocatorSettings locationSettings;
+	private final LocatorSettings novodaLocatorSettings;
 	private final Locator novodaLocator;
 	private final Context context;	
-	private final KlocatorObservableSyncObservableDelegate syncObservableDelegate;// = new KlocatorSyncObservableDelegate();
+	//private final KlocatorObservableSyncObservableDelegate syncObservableDelegate;// = new KlocatorSyncObservableDelegate();
 	private Location location;
 	//private final Collection<LocationObserver> locationObservers = new ArrayList<LocationObserver>();
 		
 	@Inject
 //	public KLocator(Context context, LocatorSettings locationSettings, KlocatorObservableSyncObservableDelegate syncObservableDelegate) {
-	public KLocator(Application context, LocatorSettings locationSettings, KlocatorObservableSyncObservableDelegate syncObservableDelegate) {
+	public KLocator(Application context, LocatorSettings novodaLocatorSettings/*, KlocatorObservableSyncObservableDelegate syncObservableDelegate*/) {
 		this.context = context;
-		this.locationSettings = locationSettings;
+		this.novodaLocatorSettings = novodaLocatorSettings;
 	
 		novodaLocator = LocatorFactory.getInstance();
-	    novodaLocator.prepare(context, locationSettings);
+	    novodaLocator.prepare(context, novodaLocatorSettings);
 	    
-	    this.syncObservableDelegate = syncObservableDelegate;
+	  //  this.syncObservableDelegate = syncObservableDelegate;
 	    
 Ln.d("constructor");
 //Verboser.reflectiveToString(  novodaLocator.getSettings() );
@@ -70,7 +65,7 @@ Ln.d("constructor");
 	};*/
 	//private CountDownLatch countDownLatch = new CountDownLatch(1);
 	
-	@Override
+	//@Override
 	public Location getLocation() {
 		/*if (location == null ) {
 			final Location novodaLocation = novodaLocator.getLocation();			
@@ -101,8 +96,9 @@ Ln.d("constructor");
 		Ln.d(location);
 		return location;
 	}
-	private void setLocation(final Location location) {
+	protected void onNewLocation(final Location location) {		
 		this.location = location;
+		/*
 		notifyObserver( new INotificationAction<LocationObserver>() {
 			@Override
 			public void execute(LocationObserver observer) {
@@ -110,12 +106,13 @@ Ln.d("notifying location: "+location);
 				observer.onLocationUpdate(location);
 			}
 		});
+		*/
 	}	
 	
-	@Override
+	//@Override
 	public void startLocationUpdates(){
 		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(locationSettings.getUpdateAction());
+		intentFilter.addAction(novodaLocatorSettings.getUpdateAction());
 Ln.d("starting updates");		
 		context.registerReceiver(freshLocationReceiver, intentFilter);
 		try {
@@ -125,7 +122,7 @@ Ln.d("starting updates");
 		}
 	}
 	
-	@Override
+	//@Override
 	public void stopLocationUpdates() {
 Ln.d("stopping updates");		
 		context.unregisterReceiver(freshLocationReceiver);
@@ -137,7 +134,7 @@ Ln.d("stopping updates");
 		public void onReceive(Context context, Intent intent) {
 			final Location location = novodaLocator.getLocation();
 Ln.d("NEW location: "+location);
-			KLocator.this.setLocation( location );
+			KLocator.this.onNewLocation( location );
 			//location = novodaLocator.getLocation();
 			/*try {
 				//countDownLatch.countDown();
@@ -147,7 +144,9 @@ Ln.d("NEW location: "+location);
 
 		}
 	};
-
+	
+	//OBSERVER SECTION
+	/*
 	@Override
 	public void attachObserver(LocationObserver observer) {
 		//locationObservers.add(observer);
@@ -162,12 +161,16 @@ Ln.d("NEW location: "+location);
 	}
 	@Override
 	public void notifyObserver(INotificationAction<LocationObserver> action) {
-		/*for (LocationObserver locationObserver: locationObservers) {
-			//locationObserver.
-			action.execute(locationObserver);
-		}*/
+//		for (LocationObserver locationObserver: locationObservers) {
+//			//locationObserver.
+//			action.execute(locationObserver);
+//		}
 		syncObservableDelegate.notifyObserver(action);
 	}
+*/	
+	
+	
+	
 	
 	/*
 	public static boolean isLocationOlder(Location location, long timeMinimumThreshold ){
