@@ -1,0 +1,122 @@
+<project name="Kusor" default="jars">
+	<!-- change this as your own	-->
+	
+	<property name="name" value="${ant.project.name}"/>
+	<property name="user" value="k0smik0"/>
+	<property name="vendor" value="Massimiliano Leone - k0smik0"/>
+	<property name="version" value="0.1"/>
+	<property name="copyright" value="Copyleft 2012 Massimiliano Leone - massimiliano.leone@iubris.net"/>
+	<property name="license.file" value="COPYING.txt"/>
+	<property name="license.url" value="http://www.gnu.org/licenses/lgpl.txt"/>
+	<property name="docurl" value="https://github.com/k0smik0/kusor"/>
+	
+	
+	<property name="android-path" value="/data/fucina/develop/usr/apps/android-sdk-linux_86/" />
+	<property name="android-sdk-target-version" value="15"/>
+		
+	<property name="main-libs-dir" value="libs"/>
+	
+		
+	<!-- don't touch below -->
+	
+	<property name="src.dir" value="src" />
+	<property name="build.dir" value="build" />	
+	
+	<property name="jar-main.file" value="${build.dir}/jars/kusor.jar" />	
+	<property name="jar-4diane.file" value="${build.dir}/jars/kusor4diane.jar" />
+	
+	<path id="classpath-android">
+		<fileset dir="${android-path}/platforms/android-${android-sdk-target-version}/">
+			<include name="android*.jar"/>
+		</fileset>
+		<fileset dir="${android-path}/add-ons/addon-google_apis-google-${android-sdk-target-version}/libs/">			
+			<include name="maps.jar"/>
+		</fileset>
+	</path>
+				
+	<path id="classpath-main">
+		<path refid="classpath-android"/>		
+		<fileset dir="${main-libs-dir}">
+			<include name="javax.inject.jar"/>
+			<include name="roboguice-2.0.jar"/>
+			<include name="sisu-guice-3.0.3-no_aop.jar"/>
+			<include name="novocation-core-1.0.6.jar"/>			
+		</fileset>
+	</path>
+	
+	<path id="classpath-4diane">
+		<path refid="classpath-main"/>
+		<fileset dir="${main-libs-dir}">
+			<include name="epicurus.jar"/>
+			<include name="diane.jar"/>			
+		</fileset>
+		<path location="${build.dir}/classes/main"/>
+	</path>
+	
+	<target name="clean-main">
+		<delete dir="${build.dir}/classes/main"/>
+		<delete file="${jar-main.file}"/>
+	</target>		
+	
+  <target name="clean-4diane">
+  	<delete dir="${build.dir}/classes/4diane"/>
+  	<delete file="${jar-4diane.file}"/>
+  </target>
+		
+	<target name="clean" depends="clean-main, clean-4diane"/>	
+	
+		
+	<target name="compile-main">
+		<mkdir dir="${build.dir}/classes/main"/>
+		<javac destdir="${build.dir}/classes/main" includeantruntime="false">
+			<src path="${src.dir}/main" />
+			<include name="**/*.java"/>
+			<exclude name="**Utils.java"/>
+			<classpath refid="classpath-main"/>
+		</javac>
+	</target>
+		
+	<target name="compile-4diane" depends="compile-main">
+		<mkdir dir="${build.dir}/classes/4diane"/>
+		<javac destdir="${build.dir}/classes/4diane" includeantruntime="false">
+			<src path="${src.dir}/kusor4diane" />
+			<include name="**/*.java"/>
+			<classpath refid="classpath-4diane"/>
+		</javac>
+	</target>
+		
+	<target name="jar-main" depends="clean-main, compile-main">
+		<mkdir dir="${build.dir}/jars/"/>
+		<jar destfile="${jar-main.file}" basedir="${build.dir}/classes/main">
+			<manifest>
+				<attribute name="Built-By" value="${user}" />    
+        <attribute name="Bundle-Name" value="${name}" />
+      	<attribute name="Bundle-Copyright" value="${copyright}" />
+      	<attribute name="Bundle-Vendor" value="${vendor}" />
+        <attribute name="Bundle-Version" value="${version}" />
+        <attribute name="Bundle-License" value="${license.url} " />
+        <attribute name="Build-DocURL" value="${docurl}" />	      
+			</manifest>			
+			<metainf dir="." includes="${license.file}"/>
+		</jar>
+	</target>
+	
+	<target name="jar-4diane" depends="clean-4diane, compile-4diane">
+			<mkdir dir="${build.dir}/jars/"/>
+			<jar destfile="${jar-4diane.file}" basedir="${build.dir}/classes/4diane">
+				<manifest>
+					<attribute name="Built-By" value="${user}" />    
+	        <attribute name="Bundle-Name" value="${name}" />
+	      	<attribute name="Bundle-Copyright" value="${copyright}" />
+	      	<attribute name="Bundle-Vendor" value="${vendor}" />
+	        <attribute name="Bundle-Version" value="${version}" />
+	        <attribute name="Bundle-License" value="${license.url} " />
+	        <attribute name="Build-DocURL" value="${docurl}" />	      
+				</manifest>			
+				<metainf dir="." includes="${license.file}"/>
+			</jar>
+		</target>
+		
+	<target name="jars" depends="jar-main, jar-4diane"/>	
+
+</project>
