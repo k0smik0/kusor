@@ -11,8 +11,8 @@
 	<property name="docurl" value="https://github.com/k0smik0/kusor"/>
 	
 	
-	<property name="android-path" value="/data/fucina/develop/usr/apps/android-sdk-linux_86/" />
-	<property name="android-sdk-target-version" value="15"/>
+	<property name="android-path" value="/data/fucina/develop/usr/apps/android-sdk/" />
+	<property name="android-sdk-target-version" value="17"/>
 		
 	<property name="main-libs-dir" value="libs"/>
 	
@@ -22,72 +22,165 @@
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="build" />	
 	
-	<property name="jar-main.file" value="${build.dir}/jars/kusor.jar" />	
-	<property name="jar-4diane.file" value="${build.dir}/jars/kusor4diane.jar" />
+	<property name="jar-main-common.file" value="${build.dir}/jars/kusor-common.jar" />
+	<property name="jar-main-roboguiced.file" value="${build.dir}/jars/kusor-roboguiced.jar" />	
+	<!--
+	<property name="jar-4diane-common.file" value="${build.dir}/jars/kusor4diane-common.jar" />
+	<property name="jar-4diane-roboguiced.file" value="${build.dir}/jars/kusor4diane-roboguiced.jar" />
+	-->
 	
 	<path id="classpath-android">
 		<fileset dir="${android-path}/platforms/android-${android-sdk-target-version}/">
 			<include name="android*.jar"/>
 		</fileset>
-		<fileset dir="${android-path}/add-ons/addon-google_apis-google-${android-sdk-target-version}/libs/">			
+		<fileset dir="${android-path}/add-ons/addon-google_apis-google-${android-sdk-target-version}/libs/">
 			<include name="maps.jar"/>
 		</fileset>
 	</path>
 				
-	<path id="classpath-main">
-		<path refid="classpath-android"/>		
+	<path id="classpath-main-common">
+		<path refid="classpath-android"/>
 		<fileset dir="${main-libs-dir}">
+			<include name="novocation-core-1.0.6.jar"/>
 			<include name="javax.inject.jar"/>
-			<include name="roboguice-2.0.jar"/>
-			<include name="sisu-guice-3.0.3-no_aop.jar"/>
-			<include name="novocation-core-1.0.6.jar"/>			
+			<include name="polaris-core.jar"/>
 		</fileset>
 	</path>
 	
-	<path id="classpath-4diane">
-		<path refid="classpath-main"/>
+	<path id="classpath-main-roboguiced">
+		<path refid="classpath-main-common"/>
+		<fileset dir="${main-libs-dir}">
+			<include name="javax.inject.jar"/>
+			<include name="roboguice*.jar"/>
+			<include name="sisu-guice-3.0.3-no_aop.jar"/>
+		</fileset>
+		<fileset dir="${build.dir}/jars">
+			<include name="kusor-common.jar"/>
+		</fileset>
+	</path>
+	
+	<!--
+	<path id="classpath-4diane-common">
+		<path refid="classpath-main-common"/>
 		<fileset dir="${main-libs-dir}">
 			<include name="epicurus.jar"/>
 			<include name="diane.jar"/>			
 		</fileset>
-		<path location="${build.dir}/classes/main"/>
+		<path location="${build.dir}/classes/main/common"/>
 	</path>
 	
-	<target name="clean-main">
-		<delete dir="${build.dir}/classes/main"/>
-		<delete file="${jar-main.file}"/>
-	</target>		
+	<path id="classpath-4diane-roboguiced">
+		<path refid="classpath-4diane-common"/>
+		<fileset dir="${main-libs-dir}">
+			<include name="javax.inject.jar"/>
+			<include name="roboguice*.jar"/>
+			<include name="sisu-guice-3.0.3-no_aop.jar"/>
+		</fileset>
+		<path location="${build.dir}/classes/main/common"/>
+		<path location="${build.dir}/classes/4diane/common"/>
+	</path>
+	-->
 	
-  <target name="clean-4diane">
-  	<delete dir="${build.dir}/classes/4diane"/>
-  	<delete file="${jar-4diane.file}"/>
+	<target name="clean-main-common">
+		<delete dir="${build.dir}/classes/main/common"/>
+	</target>
+	<target name="clean-main-roboguiced">
+		<delete dir="${build.dir}/classes/main/roboguiced"/>
+	</target>
+	
+	<target name="clean-jars">
+		<delete file="${jar-main-common.file}"/>
+		<delete file="${jar-main-roboguiced.file}"/>
+	</target>
+	
+	<!--
+  <target name="clean-4diane-common">
+  	<delete dir="${build.dir}/classes/4diane/common"/>
+  	<delete file="${jar-4diane-common.file}"/>
+  </target>
+	<target name="clean-4diane-roboguiced">
+  	<delete dir="${build.dir}/classes/4diane/roboguiced"/>
+  	<delete file="${jar-4diane-roboguiced.file}"/>
   </target>
 		
-	<target name="clean" depends="clean-main, clean-4diane"/>	
+	<target name="clean" depends="clean-main-common, clean-main-roboguiced, clean-4diane-common, clean-4diane-roboguiced"/>
+	-->
+	<target name="clean" depends="clean-main-common, clean-main-roboguiced"/>
 	
-		
-	<target name="compile-main">
-		<mkdir dir="${build.dir}/classes/main"/>
-		<javac destdir="${build.dir}/classes/main" includeantruntime="false">
-			<src path="${src.dir}/main" />
+	<target name="compile-main-common">
+		<mkdir dir="${build.dir}/classes/main/common"/>
+		<javac destdir="${build.dir}/classes/main/common" includeantruntime="false">
+			<src path="${src.dir}/main/common" />
 			<include name="**/*.java"/>
 			<exclude name="**Utils.java"/>
-			<classpath refid="classpath-main"/>
+			<classpath refid="classpath-main-common"/>
 		</javac>
 	</target>
-		
-	<target name="compile-4diane" depends="compile-main">
-		<mkdir dir="${build.dir}/classes/4diane"/>
-		<javac destdir="${build.dir}/classes/4diane" includeantruntime="false">
-			<src path="${src.dir}/kusor4diane" />
+	
+	<target name="compile-main-roboguiced">
+		<mkdir dir="${build.dir}/classes/main/roboguiced"/>
+		<javac destdir="${build.dir}/classes/main/roboguiced" includeantruntime="false">
+			<src path="${src.dir}/main/roboguiced"/>
+			<classpath refid="classpath-main-roboguiced"/>
+		</javac>
+	</target>
+	
+	<!--
+	<target name="compile-4diane-common" depends="compile-main-common">
+		<mkdir dir="${build.dir}/classes/4diane/common"/>
+		<javac destdir="${build.dir}/classes/4diane/common" includeantruntime="false">
+			<src path="${src.dir}/kusor4diane/common" />
 			<include name="**/*.java"/>
-			<classpath refid="classpath-4diane"/>
+			<classpath refid="classpath-4diane-common"/>
+			
 		</javac>
 	</target>
 		
-	<target name="jar-main" depends="clean-main, compile-main">
+	<target name="compile-4diane-roboguiced" depends="compile-4diane-common">
+		<mkdir dir="${build.dir}/classes/4diane/roboguiced"/>
+		<javac destdir="${build.dir}/classes/4diane/roboguiced" includeantruntime="false">
+			<src path="${src.dir}/kusor4diane/roboguiced" />
+			<include name="**/*.java"/>
+			<classpath refid="classpath-4diane-roboguiced"/>
+		</javac>
+	</target>
+	-->
+	<target name="jar-main-common" depends="clean-main-common, compile-main-common">
 		<mkdir dir="${build.dir}/jars/"/>
-		<jar destfile="${jar-main.file}" basedir="${build.dir}/classes/main">
+		<jar destfile="${jar-main-common.file}" basedir="${build.dir}/classes/main/common">
+			<manifest>
+				<attribute name="Built-By" value="${user}" />    
+        <attribute name="Bundle-Name" value="${name}" />
+      	<attribute name="Bundle-Copyright" value="${copyright}" />
+      	<attribute name="Bundle-Vendor" value="${vendor}" />
+        <attribute name="Bundle-Version" value="${version}" />
+        <attribute name="Bundle-License" value="${license.url} " />
+        <attribute name="Build-DocURL" value="${docurl}" />	      
+			</manifest>			
+			<metainf dir="." includes="${license.file}"/>
+		</jar>
+		<antcall target="clean-main-common"/>
+	</target>
+	<target name="jar-main-roboguiced" depends="clean-main-roboguiced, compile-main-roboguiced">
+		<mkdir dir="${build.dir}/jars/"/>
+		<jar destfile="${jar-main-roboguiced.file}" basedir="${build.dir}/classes/main/roboguiced">
+			<manifest>
+				<attribute name="Built-By" value="${user}" />    
+        <attribute name="Bundle-Name" value="${name}" />
+      	<attribute name="Bundle-Copyright" value="${copyright}" />
+      	<attribute name="Bundle-Vendor" value="${vendor}" />
+        <attribute name="Bundle-Version" value="${version}" />
+        <attribute name="Bundle-License" value="${license.url} " />
+        <attribute name="Build-DocURL" value="${docurl}" />	      
+			</manifest>			
+			<metainf dir="." includes="${license.file}"/>
+		</jar>
+		<antcall target="clean-main-roboguiced"/>
+	</target>
+	<!--
+	<target name="jar-4diane-common" depends="clean-4diane-common, compile-4diane-common">
+		<mkdir dir="${build.dir}/jars/"/>
+		<jar destfile="${jar-4diane-common.file}" basedir="${build.dir}/classes/4diane/common">
 			<manifest>
 				<attribute name="Built-By" value="${user}" />    
         <attribute name="Bundle-Name" value="${name}" />
@@ -100,23 +193,23 @@
 			<metainf dir="." includes="${license.file}"/>
 		</jar>
 	</target>
-	
-	<target name="jar-4diane" depends="clean-4diane, compile-4diane">
-			<mkdir dir="${build.dir}/jars/"/>
-			<jar destfile="${jar-4diane.file}" basedir="${build.dir}/classes/4diane">
-				<manifest>
-					<attribute name="Built-By" value="${user}" />    
-	        <attribute name="Bundle-Name" value="${name}" />
-	      	<attribute name="Bundle-Copyright" value="${copyright}" />
-	      	<attribute name="Bundle-Vendor" value="${vendor}" />
-	        <attribute name="Bundle-Version" value="${version}" />
-	        <attribute name="Bundle-License" value="${license.url} " />
-	        <attribute name="Build-DocURL" value="${docurl}" />	      
-				</manifest>			
-				<metainf dir="." includes="${license.file}"/>
-			</jar>
-		</target>
-		
-	<target name="jars" depends="jar-main, jar-4diane"/>	
+	<target name="jar-4diane-roboguiced" depends="clean-4diane-roboguiced, compile-4diane-roboguiced">
+		<mkdir dir="${build.dir}/jars/"/>
+		<jar destfile="${jar-4diane-roboguiced.file}" basedir="${build.dir}/classes/4diane/roboguiced">
+			<manifest>
+				<attribute name="Built-By" value="${user}" />    
+        <attribute name="Bundle-Name" value="${name}" />
+      	<attribute name="Bundle-Copyright" value="${copyright}" />
+      	<attribute name="Bundle-Vendor" value="${vendor}" />
+        <attribute name="Bundle-Version" value="${version}" />
+        <attribute name="Bundle-License" value="${license.url} " />
+        <attribute name="Build-DocURL" value="${docurl}" />	      
+			</manifest>			
+			<metainf dir="." includes="${license.file}"/>
+		</jar>
+	</target>
+	<target name="jars" depends="jar-main-common, jar-main-roboguiced, jar-4diane-common, jar-4diane-roboguiced"/>
+	-->
+	<target name="jars" depends="jar-main-common, jar-main-roboguiced"/>
 
 </project>
