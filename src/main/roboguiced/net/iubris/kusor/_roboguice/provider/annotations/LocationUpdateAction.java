@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyleft 2012 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
- * UpdatesDistanceAnnotation.java is part of 'Kusor'.
+ * LocationUpdateActionAnnotation.java is part of 'Kusor'.
  * 
  * 'Kusor' is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,4 +29,4 @@ import javax.inject.Qualifier;
 @Qualifier
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UpdatesDistanceAnnotation {}
+public @interface LocationUpdateAction {}

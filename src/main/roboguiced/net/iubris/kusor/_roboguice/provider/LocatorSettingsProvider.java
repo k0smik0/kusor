@@ -22,38 +22,32 @@ package net.iubris.kusor._roboguice.provider;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import net.iubris.kusor._roboguice.provider.annotations.LocationUpdateActionAnnotation;
-import net.iubris.kusor._roboguice.provider.annotations.PackageNameAnnotation;
-import net.iubris.kusor._roboguice.provider.annotations.UpdatesDistanceAnnotation;
-import net.iubris.kusor._roboguice.provider.annotations.UpdatesIntervalAnnotation;
-
+import net.iubris.kusor._roboguice.provider.annotations.LocationUpdateAction;
 import com.novoda.location.LocatorSettings;
 
 public class LocatorSettingsProvider implements Provider<LocatorSettings> {
 
-	private String locationUpdateAction;
-	private String packageName;
-	
-	private int updatesInterval;
-	private int updatesDistance;
+	private final String locationUpdateAction;
+//	private final int updatesInterval;
+//	private final int updatesDistance;
 		
 	@Inject
 	protected LocatorSettingsProvider(
-			@LocationUpdateActionAnnotation String locationUpdateAction,
-			@PackageNameAnnotation  String packageName, 
-			@UpdatesIntervalAnnotation int updatesInterval, 
-			@UpdatesDistanceAnnotation int updatesDistance) {
+			@LocationUpdateAction String locationUpdateAction
+//			@PackageNameAnnotation  String packageName, 
+			/*@,UpdatesInterval int updatesInterval, 
+			@UpdatesDistance int updatesDistance*/) {
 		this.locationUpdateAction = locationUpdateAction;
-		this.packageName = packageName;
-		this.updatesInterval = updatesInterval;
-		this.updatesDistance = updatesDistance;
+//		this.updatesInterval = updatesInterval;
+//		this.updatesDistance = updatesDistance;
 	}
 
 	@Override
 	public LocatorSettings get() {
-		final LocatorSettings locationSettings = new LocatorSettings(packageName, locationUpdateAction);
-		locationSettings.setUpdatesInterval(updatesInterval);
-		locationSettings.setUpdatesDistance(updatesDistance);
+		final LocatorSettings locationSettings = 
+				new LocatorSettings(locationUpdateAction);
+//		locationSettings.setUpdatesInterval(updatesInterval);
+//		locationSettings.setUpdatesDistance(updatesDistance);
 		return locationSettings;
 	}
 

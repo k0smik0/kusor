@@ -22,10 +22,9 @@ package net.iubris.kusor._roboguice.module;
 import java.util.Locale;
 
 import net.iubris.kusor._roboguice.provider.LocatorSettingsProvider;
-import net.iubris.kusor._roboguice.provider.annotations.LocationUpdateActionAnnotation;
-import net.iubris.kusor._roboguice.provider.annotations.PackageNameAnnotation;
-import net.iubris.kusor._roboguice.provider.annotations.UpdatesDistanceAnnotation;
-import net.iubris.kusor._roboguice.provider.annotations.UpdatesIntervalAnnotation;
+import net.iubris.kusor._roboguice.provider.annotations.LocationUpdateAction;
+import net.iubris.kusor._roboguice.provider.annotations.UpdatesDistance;
+import net.iubris.kusor._roboguice.provider.annotations.UpdatesInterval;
 import net.iubris.kusor.locator.KLocator;
 
 import com.google.inject.AbstractModule;
@@ -33,49 +32,39 @@ import com.novoda.location.LocatorSettings;
 
 public class KusorModule extends AbstractModule {
 
-	private final String packageName;
+//	private final String packageName;
 	private final String updateAction;
 	private final int updatesInterval;
 	private final int updatesDistance;
 	//private final boolean internal;
 	
 	public KusorModule() {
-		this.packageName = "net.iubris.kusor";
-		this.updateAction = packageName+".action"+"ACTION_FRESH_LOCATION";
+//		this.packageName = "net.iubris.kusor";
+		this.updateAction = "net.iubris.location.action.ACTION_FRESH_LOCATION";
 		this.updatesInterval = 5*60*1000; // second
 		this.updatesDistance = 50; // meters
 		//internal = false;
 	}
 	/**
-	 * @param packageName 		something as "your.package.app"
 	 * @param updateAction 		something as SOMETHING_AS_ACTION_FRESH_LOCATION
 	 * @param updatesInterval 	an integer (milliseconds)
 	 * @param updatesDistance 	an integer (meters)
 	 */
-	public KusorModule(String packageName, String updateAction,
-			int updatesInterval, int updatesDistance) {
-		this.packageName = packageName;
-//		if (!updateAction.startsWith("action."))
-//			throw new KusorModuleException("updateAction string must be start with 'action.'");
-		this.updateAction = packageName+".action."+updateAction.toUpperCase(Locale.getDefault());
+	public KusorModule(String updateAction, int updatesInterval, int updatesDistance) {
+		this.updateAction = updateAction.toUpperCase(Locale.getDefault());
 		this.updatesInterval = updatesInterval;
 		this.updatesDistance = updatesDistance;
-		//this.internal = true;
 	}
 	
 	@Override
 	protected void configure() {		
 		
-		//if (internal) {
-		bindConstant().annotatedWith(PackageNameAnnotation.class).to(packageName);
-		bindConstant().annotatedWith(LocationUpdateActionAnnotation.class).to(updateAction);
-		bindConstant().annotatedWith(UpdatesIntervalAnnotation.class).to(updatesInterval);
-		bindConstant().annotatedWith(UpdatesDistanceAnnotation.class).to(updatesDistance);
-		//	Ln.d("internal "+internal);
-		//}
+		bindConstant().annotatedWith(LocationUpdateAction.class).to(updateAction);
+		bindConstant().annotatedWith(UpdatesInterval.class).to(updatesInterval);
+		bindConstant().annotatedWith(UpdatesDistance.class).to(updatesDistance);
+
 		bind(LocatorSettings.class).toProvider(LocatorSettingsProvider.class);
 		bind(KLocator.class).asEagerSingleton();
 		//bind(LocationObservableProvider.class).to(KLocator.class);	
 	}
-
 }
