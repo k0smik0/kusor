@@ -19,10 +19,14 @@
  ******************************************************************************/
 package net.iubris.kusor.locator;
 
-import javax.inject.Inject;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-import net.iubris.kusor._roboguice.provider.annotations.UpdatesDistance;
-import net.iubris.kusor._roboguice.provider.annotations.UpdatesInterval;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import net.iubris.kusor._inject.locator.annotations.UpdatesDistance;
+import net.iubris.kusor._inject.locator.annotations.UpdatesInterval;
 import net.iubris.polaris.locator.Locator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,57 +34,80 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.util.Log;
-import com.novoda.location.LocatorFactory;
-import com.novoda.location.LocatorSettings;
+
 import com.novoda.location.exception.NoProviderAvailable;
 
+/**
+ * KLocator implements Locator (from Polaris package), providing a LocationUpdater and a LocationProvider<br/>
+ * Using novocation locator, It retrieves a new location, which will be stored internally. <br/>
+ * This new location can be consumed via getLocation(); <br/>
+ * Be careful: behind the scene, all is asynchronous and getLocation() could return "null", at the beginning.<br/>
+ * You can use a BroadcastReceiver to receive new location, registering it with IntentFilter action as "«appPackageName».ACTION_LOCATION_UPDATED",<br/>
+ * for example "com.example.ACTION_LOCATION_UPDATED" [ you can retrieve your appPackage using context.getPackageName() ]
+ *  
+ * @author Massimiliano Leone - k0smik0
+ */
+@Singleton
 public class KLocator implements Locator {
 	
-	private final LocatorSettings novodaLocatorSettings;
+	public static String ACTION_UPDATED = "ACTION_LOCATION_UPDATED";
+	
 	private final com.novoda.location.Locator novodaLocator;
 	private final Context context;	
-	private Location location;
-	
 	private final int updatesInterval;
 	private final int updatesDistance;
 
+	private Location location;
+	private CountDownLatch latch ;
+
 	@Inject
-	public KLocator(Context context, LocatorSettings novodaLocatorSettings,
-			@UpdatesInterval int updatesInterval, 
+	public KLocator(Context context,
+			com.novoda.location.Locator novodaLocator,
+			@UpdatesInterval int updatesInterval,
 			@UpdatesDistance int updatesDistance) {
 		this.context = context;
-		this.novodaLocatorSettings = novodaLocatorSettings;
-		novodaLocatorSettings.setUpdatesInterval(updatesInterval);
-		novodaLocatorSettings.setUpdatesDistance(updatesDistance);
+		this.novodaLocator = novodaLocator;
 		this.updatesDistance = updatesDistance;
 		this.updatesInterval = updatesInterval;
-	
-		novodaLocator = LocatorFactory.getInstance();
-	    novodaLocator.prepare(context, novodaLocatorSettings);
-Log.d("KLocator"," "+hashCode());
+		this.latch = new CountDownLatch(1);
 	}
 	
+	@Override
 	public Location getLocation() {
+		if (location == null) {
+Log.d("KLocator:78","location is null, waiting");
+			try {
+				latch.await(4,TimeUnit.SECONDS);
+Log.d("KLocator:81","releasing latch however");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} else {
+Log.d("KLocator:86","location is not null, just returning "+location);			
+		}
 		return location;
 	}
 	protected void onNewLocation(final Location location) {		
 		this.location = location;
+		latch.countDown();
 	}	
 	
-	public void startLocationUpdates(){
+	@Override
+	public void startLocationUpdates() {
+Log.d("KLocator:97","starting updates");
 		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(novodaLocatorSettings.getUpdateAction());
-//Ln.d("starting updates");		
+		intentFilter.addAction(novodaLocator.getSettings().getUpdateAction());
 		context.registerReceiver(freshLocationReceiver, intentFilter);
-		try {
+		try {			
 			novodaLocator.startLocationUpdates();
 		} catch(NoProviderAvailable np) {
 			np.printStackTrace();
 		}
 	}
 	
+	@Override
 	public void stopLocationUpdates() {
-//Ln.d("stopping updates");		
+Log.d("KLocator:95","stopping updates");
 		context.unregisterReceiver(freshLocationReceiver);
 		novodaLocator.stopLocationUpdates();		
 	}
@@ -89,12 +116,13 @@ Log.d("KLocator"," "+hashCode());
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			final Location location = novodaLocator.getLocation();
-//			if (isDebuggable(context)) {
-//			if (BuildConfig.DEBUG) {
-			Log.d("KLocator:85","Kusor's freshLocationReceiver, with Context: "+context+" - new location fix is "+location);
-//				Toast.makeText(context, "Kusor's freshLocationReceiver, with Context: "+context+" - new location fix is "+location, Toast.LENGTH_SHORT).show();
-//			}
+Log.d("KLocator:119","Kusor's freshLocationReceiver, with Context: "+context+" - new location fix is "+location);
+			// store location
 			KLocator.this.onNewLocation( location );
+			// broadcast again
+			String action = context.getPackageName()+"."+ACTION_UPDATED;
+Log.d("KLocator:124",action);
+			context.sendBroadcast( new Intent(action) );
 		}
 	};
 
@@ -102,12 +130,11 @@ Log.d("KLocator"," "+hashCode());
 	public Integer getMinimumDistanceThreshold() {
 		return updatesDistance;
 	}
-
 	@Override
 	public Integer getMinimumTimeThreshold() {
 		return updatesInterval;
 	}
-	
+
 	/*
 	private boolean isDebuggable(Context context) {
 	    boolean debuggable = false;

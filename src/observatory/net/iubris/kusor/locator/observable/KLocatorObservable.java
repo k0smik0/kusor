@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyleft 2012 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
- * KLocator4Diane.java is part of 'Kusor'.
+ * KLocatorObservable.java is part of 'Kusor'.
  * 
  * 'Kusor' is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,23 +20,33 @@
 package net.iubris.kusor.locator.observable;
 
 
+import javax.inject.Inject;
+
+import net.iubris.kusor._inject.locator.annotations.UpdatesDistance;
+import net.iubris.kusor._inject.locator.annotations.UpdatesInterval;
 import net.iubris.kusor.locator.KLocator;
-import net.iubris.polaris.locator.Locator;
-import android.app.Application;
+import net.iubris.polaris.observatory.action.LocationNotificationAction;
+import net.iubris.polaris.observatory.observable.LocationObservable;
+import net.iubris.polaris.observatory.observable.LocatorObservableSyncDelegate;
+import net.iubris.polaris.observatory.observer.LocationObserver;
+import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
-import com.novoda.location.LocatorSettings;
+import com.novoda.location.Locator;
 
-public class KLocatorObservable extends KLocator implements Locator {
+public class KLocatorObservable extends KLocator implements LocationObservable {
 
-	private final KlocatorObservableSyncObservableDelegate syncObservableDelegate;
+	private final LocatorObservableSyncDelegate syncObservableDelegate;
 
-	public KLocatorObservable(Application context, LocatorSettings novodaLocatorSettings,
-			KlocatorObservableSyncObservableDelegate syncObservableDelegate) {
-		super(context, novodaLocatorSettings);
+	@Inject	
+	public KLocatorObservable(Context context, Locator novodaLocator,
+			@UpdatesInterval int updatesInterval,
+			@UpdatesDistance int updatesDistance,
+			LocatorObservableSyncDelegate syncObservableDelegate) {
+		super(context, novodaLocator, updatesInterval, updatesDistance);
 		this.syncObservableDelegate = syncObservableDelegate;
 	}
-	
 	@Override
 	public void attachObserver(LocationObserver observer) {
 		syncObservableDelegate.attachObserver(observer);
@@ -44,22 +54,17 @@ public class KLocatorObservable extends KLocator implements Locator {
 	@Override
 	public void detachObserver(LocationObserver observer) {
 		syncObservableDelegate.detachObserver(observer);	
-	}
-	
+	}	
 	@Override
 	public void notifyObserver(LocationNotificationAction action) {
 		syncObservableDelegate.notifyObserver(action);
-	}
-	
-	
+	}	
 	@Override
 	protected void onNewLocation(final Location location) {
-//		super.onNewLocation(location);		
-		
 		notifyObserver( new LocationNotificationAction() {
 			@Override
 			public void execute(LocationObserver observer) {
-//Ln.d("notifying location: "+location);				
+Log.d("KLocatorObservable:77","notifying location: "+location);				
 				observer.onLocationUpdate(location);
 			}
 		});		

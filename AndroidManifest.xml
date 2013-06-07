@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.iubris.kusor"
-    android:versionCode="1"
-    android:versionName="1.0" >
+	package="net.iubris.kusor_sample"
+	android:versionCode="1"
+	android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="15" />
+	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
-    <application/>
+	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="16" />
+
+	<application
+		android:allowBackup="true"
+		android:icon="@drawable/ic_launcher"
+		android:label="Kusor">
+		<activity
+			android:name=".activity.KusorActivity"
+			android:label="Kusor" 
+			android:launchMode="singleTask">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<service android:name=".service.KusorService"/>
+	
+		<!-- start novoda location section -->
+		<receiver android:name="com.novoda.location.receiver.LocationChanged" android:exported="false">
+			<intent-filter>
+				<action android:name="com.novoda.location.ACTIVE_LOCATION_UPDATE_ACTION"/>
+			</intent-filter>
+		</receiver>
+					
+		<receiver android:name="com.novoda.location.receiver.PassiveLocationChanged"/>
+		
+		<receiver android:name="com.novoda.location.receiver.RestorePassiveListenerBoot">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED"/>
+			</intent-filter>
+		</receiver>
+		
+		<receiver android:name="com.novoda.location.receiver.UnregisterPassiveListenerOnLostConnectivity" android:enabled="false">
+			<intent-filter>
+				<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+			</intent-filter>
+		</receiver>
+		
+		<receiver android:name="com.novoda.location.receiver.UnregisterPassiveLocationUpdatesOnLowBattery">
+			<intent-filter>
+				<action android:name="android.intent.action.BATTERY_LOW"/>
+				<action android:name="android.intent.action.BATTERY_OKAY"/>
+			</intent-filter>
+		</receiver>
+		<!-- end novoda location section -->
+	
+	</application>
 
 </manifest>

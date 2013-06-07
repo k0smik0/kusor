@@ -17,37 +17,52 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor._roboguice.provider;
+package net.iubris.kusor._inject.providers;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import net.iubris.kusor._roboguice.provider.annotations.LocationUpdateAction;
+import net.iubris.kusor._inject.locator.annotations.UpdatesDistance;
+import net.iubris.kusor._inject.locator.annotations.UpdatesInterval;
+import net.iubris.kusor._inject.providers.annotations.LocationUpdateAction;
+import android.content.Context;
+import android.util.Log;
+
 import com.novoda.location.LocatorSettings;
 
+//@ContextSingleton
 public class LocatorSettingsProvider implements Provider<LocatorSettings> {
 
 	private final String locationUpdateAction;
-//	private final int updatesInterval;
-//	private final int updatesDistance;
+//	private final String packageName;
+	private final int updatesInterval;
+	private final int updatesDistance;
+	private final Context context;
 		
 	@Inject
 	protected LocatorSettingsProvider(
-			@LocationUpdateAction String locationUpdateAction
-//			@PackageNameAnnotation  String packageName, 
-			/*@,UpdatesInterval int updatesInterval, 
-			@UpdatesDistance int updatesDistance*/) {
+			@LocationUpdateAction String locationUpdateAction,
+//			@LocationUpdatePackageName String packageName,
+			@UpdatesInterval int updatesInterval, 
+			@UpdatesDistance int updatesDistance
+			,Context context) {
 		this.locationUpdateAction = locationUpdateAction;
-//		this.updatesInterval = updatesInterval;
-//		this.updatesDistance = updatesDistance;
+//		this.packageName = packageName;
+		this.updatesInterval = updatesInterval;
+		this.updatesDistance = updatesDistance;
+		this.context = context;
+Log.d("LocatorSettingsProvider:54", locationUpdateAction+" "+/*packageName+*/" "+context.getPackageName());
 	}
 
 	@Override
 	public LocatorSettings get() {
-		final LocatorSettings locationSettings = 
-				new LocatorSettings(locationUpdateAction);
-//		locationSettings.setUpdatesInterval(updatesInterval);
-//		locationSettings.setUpdatesDistance(updatesDistance);
+Log.d("LocatorSettingsProvider:61",context.getPackageName());
+		final LocatorSettings locationSettings =
+//				new LocatorSettings(packageName, locationUpdateAction);
+				new LocatorSettings(context.getPackageName(), locationUpdateAction);
+//				new LocatorSettings("com.novoda.location", "ACTIVE_LOCATION_UPDATE_ACTION");
+		locationSettings.setUpdatesInterval(updatesInterval);
+		locationSettings.setUpdatesDistance(updatesDistance);
 		return locationSettings;
 	}
 

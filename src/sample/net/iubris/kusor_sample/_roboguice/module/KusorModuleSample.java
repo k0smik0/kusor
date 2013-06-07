@@ -1,7 +1,11 @@
+package net.iubris.kusor_sample._roboguice.module;
+
+import net.iubris.kusor._roboguice.module.KusorModule;
+
 /*******************************************************************************
  * Copyleft 2012 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
- * UpdatesDistanceAnnotation.java is part of 'Kusor'.
+ * KusorModuleSample.java is part of 'Kusor'.
  * 
  * 'Kusor' is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,16 +21,11 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor._roboguice.provider.annotations;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import javax.inject.Qualifier;
-
-@Qualifier
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface UpdatesDistance {}
+public class KusorModuleSample extends KusorModule {
+	
+	@Override
+	protected void configure() {
+		install( new KusorModule(/*"net.iubris.kusor_sample", "ACTION_LOCATION_FRESH",*/ 5*60*1000, 50));
+	}
+}
