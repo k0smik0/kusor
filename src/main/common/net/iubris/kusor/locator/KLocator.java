@@ -19,6 +19,7 @@
  ******************************************************************************/
 package net.iubris.kusor.locator;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -87,10 +88,22 @@ Log.d("KLocator:86","location is not null, just returning "+location);
 		}
 		return location;
 	}
-	protected void onNewLocation(final Location location) {		
+	protected void onNewLocation(final Location location) {
+Log.d("KLocator:92",""+location);
+		formatLocationDecimalPlaces(location);
+Log.d("KLocator:94",""+location);
 		this.location = location;
 		latch.countDown();
-	}	
+	}
+	/**
+	 * format to 6 decimal places
+	 * @param location
+	 */
+	protected void formatLocationDecimalPlaces(Location location) {
+		DecimalFormat dec = new DecimalFormat("##.######");
+		location.setLatitude( Float.parseFloat(dec.format(location.getLatitude() )) );
+		location.setLongitude( Float.parseFloat(dec.format(location.getLongitude() )) );
+	}
 	
 	@Override
 	public void startLocationUpdates() {

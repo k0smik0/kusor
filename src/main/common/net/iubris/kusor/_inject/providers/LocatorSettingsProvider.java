@@ -33,11 +33,13 @@ import com.novoda.location.LocatorSettings;
 //@ContextSingleton
 public class LocatorSettingsProvider implements Provider<LocatorSettings> {
 
-	private final String locationUpdateAction;
+	/*private final String locationUpdateAction;
 //	private final String packageName;
 	private final int updatesInterval;
 	private final int updatesDistance;
 	private final Context context;
+	*/
+	private final LocatorSettings locationSettings;
 		
 	@Inject
 	protected LocatorSettingsProvider(
@@ -46,24 +48,26 @@ public class LocatorSettingsProvider implements Provider<LocatorSettings> {
 			@UpdatesInterval int updatesInterval, 
 			@UpdatesDistance int updatesDistance
 			,Context context) {
-		this.locationUpdateAction = locationUpdateAction;
+		/*this.locationUpdateAction = locationUpdateAction;
 //		this.packageName = packageName;
 		this.updatesInterval = updatesInterval;
 		this.updatesDistance = updatesDistance;
-		this.context = context;
+		this.context = context;*/
+		
 Log.d("LocatorSettingsProvider:54", locationUpdateAction+" "+/*packageName+*/" "+context.getPackageName());
+
+		Log.d("LocatorSettingsProvider:56",context.getPackageName());
+		locationSettings =
+		//		new LocatorSettings(packageName, locationUpdateAction);
+				new LocatorSettings(context.getPackageName(), locationUpdateAction); // 1.0.6, 1.0.8
+		//		new LocatorSettings(locationUpdateAction); // 2.0-alpha//
+		//		new LocatorSettings("com.novoda.location", "ACTIVE_LOCATION_UPDATE_ACTION");
+		locationSettings.setUpdatesInterval(updatesInterval);
+		locationSettings.setUpdatesDistance(updatesDistance);
 	}
 
 	@Override
 	public LocatorSettings get() {
-Log.d("LocatorSettingsProvider:61",context.getPackageName());
-		final LocatorSettings locationSettings =
-//				new LocatorSettings(packageName, locationUpdateAction);
-				new LocatorSettings(context.getPackageName(), locationUpdateAction);
-//				new LocatorSettings("com.novoda.location", "ACTIVE_LOCATION_UPDATE_ACTION");
-		locationSettings.setUpdatesInterval(updatesInterval);
-		locationSettings.setUpdatesDistance(updatesDistance);
 		return locationSettings;
 	}
-
 }

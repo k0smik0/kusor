@@ -32,7 +32,7 @@ public class KusorActivity extends RoboActivity {
 //			if (intent.getAction().equalsIgnoreCase("net.iubris.kusor.ACTION_LOCATION_UPDATED")){
 				KLocator kLocator = RoboGuice.getInjector(context).getInstance(KLocator.class);
 				Location location = kLocator.getLocation();
-				showLocation("onReceive[KusorActivity:35]: ",location);
+				showLocation("onReceive[KusorActivity:35]:\n",location);
 //			}
 		}
 	};
@@ -56,7 +56,7 @@ public class KusorActivity extends RoboActivity {
 				return kLocator.getLocation();
 			}
 			protected void onSuccess(Location location) throws Exception {
-				showLocation("onResume: ",location);
+				showLocation("onResume:\n",location);
 			};
 		}.execute();
 	};

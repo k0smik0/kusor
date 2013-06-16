@@ -8,7 +8,7 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
-	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="16" />
+	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="16"/>
 
 	<application
 		android:allowBackup="true"
@@ -24,8 +24,37 @@
 			</intent-filter>
 		</activity>
 		<service android:name=".service.KusorService"/>
+		
+		<!-- start novoda location section // 1.0.8, 2.0-alpha -->
+		<receiver android:name="com.novoda.location.receiver.LocationChanged" android:exported="false">
+			<intent-filter>
+				<action android:name="com.novoda.location.ACTIVE_LOCATION_UPDATE_ACTION"/>
+			</intent-filter>
+		</receiver>
+		
+		<receiver android:name="com.novoda.location.receiver.PassiveLocationChanged"/>
+		
+		<receiver android:name="com.novoda.location.receiver.RestorePassiveListenerOnLostConnectivity" android:enabled="false">
+			<intent-filter>
+				<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+			</intent-filter>
+		</receiver>
+		
+		<receiver android:name="com.novoda.location.receiver.UnregisterPassiveListenerOnLowBattery">
+			<intent-filter>
+				<action android:name="android.intent.action.BATTERY_LOW"/>
+				<action android:name="android.intent.action.BATTERY_OKAY"/>
+			</intent-filter>
+		</receiver>
+		
+		<receiver android:name="com.novoda.location.receiver.RestorePassiveListenerBoot">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED"/>
+			</intent-filter>
+		</receiver>
 	
-		<!-- start novoda location section -->
+		<!-- start novoda location section // 1.0.6 -->
+		<!-- 
 		<receiver android:name="com.novoda.location.receiver.LocationChanged" android:exported="false">
 			<intent-filter>
 				<action android:name="com.novoda.location.ACTIVE_LOCATION_UPDATE_ACTION"/>
@@ -52,6 +81,7 @@
 				<action android:name="android.intent.action.BATTERY_OKAY"/>
 			</intent-filter>
 		</receiver>
+		 -->
 		<!-- end novoda location section -->
 	
 	</application>
