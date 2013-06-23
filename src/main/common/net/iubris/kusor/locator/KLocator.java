@@ -19,7 +19,6 @@
  ******************************************************************************/
 package net.iubris.kusor.locator;
 
-import java.text.DecimalFormat;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -34,8 +33,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.util.Log;
-
 import com.novoda.location.exception.NoProviderAvailable;
 
 /**
@@ -76,22 +73,22 @@ public class KLocator implements Locator {
 	@Override
 	public Location getLocation() {
 		if (location == null) {
-Log.d("KLocator:78","location is null, waiting");
+//Log.d("KLocator:78","location is null, waiting");
 			try {
 				latch.await(4,TimeUnit.SECONDS);
-Log.d("KLocator:81","releasing latch however");
+//Log.d("KLocator:81","releasing latch however");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		} else {
-Log.d("KLocator:86","location is not null, just returning "+location);			
+//Log.d("KLocator:86","location is not null, just returning "+location);			
 		}
 		return location;
 	}
 	protected void onNewLocation(final Location location) {
-Log.d("KLocator:92",""+location);
-		formatLocationDecimalPlaces(location);
-Log.d("KLocator:94",""+location);
+//Log.d("KLocator:92",""+location);
+//		formatLocationDecimalPlaces(location);
+//Log.d("KLocator:94",""+location);
 		this.location = location;
 		latch.countDown();
 	}
@@ -99,15 +96,26 @@ Log.d("KLocator:94",""+location);
 	 * format to 6 decimal places
 	 * @param location
 	 */
+	/*
 	protected void formatLocationDecimalPlaces(Location location) {
-		DecimalFormat dec = new DecimalFormat("##.######");
-		location.setLatitude( Float.parseFloat(dec.format(location.getLatitude() )) );
-		location.setLongitude( Float.parseFloat(dec.format(location.getLongitude() )) );
-	}
+//		DecimalFormat dec = new DecimalFormat("##.######");
+		DecimalFormat dec = new DecimalFormat("00.000000");
+//		NumberFormat dec = NumberFormat.getCurrencyInstance();
+//		dec.setMaximumFractionDigits(6);
+		String latString = dec.format(location.getLatitude()).replace(",", ".");
+		Log.d("KLocator:107",latString);
+		float fLat = Float.parseFloat(latString);
+		location.setLatitude( fLat );
+		
+		String lngString = dec.format(location.getLongitude()).replace(",", ".");
+		float fLng = Float.parseFloat(lngString);
+		location.setLongitude( fLng );
+//		Dec
+	}*/
 	
 	@Override
 	public void startLocationUpdates() {
-Log.d("KLocator:97","starting updates");
+//Log.d("KLocator:97","starting updates");
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(novodaLocator.getSettings().getUpdateAction());
 		context.registerReceiver(freshLocationReceiver, intentFilter);
@@ -120,7 +128,7 @@ Log.d("KLocator:97","starting updates");
 	
 	@Override
 	public void stopLocationUpdates() {
-Log.d("KLocator:95","stopping updates");
+//Log.d("KLocator:95","stopping updates");
 		context.unregisterReceiver(freshLocationReceiver);
 		novodaLocator.stopLocationUpdates();		
 	}
@@ -129,12 +137,12 @@ Log.d("KLocator:95","stopping updates");
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			final Location location = novodaLocator.getLocation();
-Log.d("KLocator:119","Kusor's freshLocationReceiver, with Context: "+context+" - new location fix is "+location);
+//Log.d("KLocator:119","Kusor's freshLocationReceiver, with Context: "+context+" - new location fix is "+location);
 			// store location
 			KLocator.this.onNewLocation( location );
 			// broadcast again
 			String action = context.getPackageName()+"."+ACTION_UPDATED;
-Log.d("KLocator:124",action);
+//Log.d("KLocator:124",action);
 			context.sendBroadcast( new Intent(action) );
 		}
 	};

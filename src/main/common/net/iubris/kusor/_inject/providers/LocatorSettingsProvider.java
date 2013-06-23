@@ -26,7 +26,6 @@ import net.iubris.kusor._inject.locator.annotations.UpdatesDistance;
 import net.iubris.kusor._inject.locator.annotations.UpdatesInterval;
 import net.iubris.kusor._inject.providers.annotations.LocationUpdateAction;
 import android.content.Context;
-import android.util.Log;
 
 import com.novoda.location.LocatorSettings;
 
@@ -54,9 +53,9 @@ public class LocatorSettingsProvider implements Provider<LocatorSettings> {
 		this.updatesDistance = updatesDistance;
 		this.context = context;*/
 		
-Log.d("LocatorSettingsProvider:54", locationUpdateAction+" "+/*packageName+*/" "+context.getPackageName());
+//Log.d("LocatorSettingsProvider:54", locationUpdateAction+" "+/*packageName+*/" "+context.getPackageName());
 
-		Log.d("LocatorSettingsProvider:56",context.getPackageName());
+//Log.d("LocatorSettingsProvider:56",context.getPackageName());
 		locationSettings =
 		//		new LocatorSettings(packageName, locationUpdateAction);
 				new LocatorSettings(context.getPackageName(), locationUpdateAction); // 1.0.6, 1.0.8
