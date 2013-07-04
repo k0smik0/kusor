@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyleft 2012 Massimiliano Leone - massimiliano.leone@iubris.net .
+ * Copyleft 2013 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
- * LocationUpdateActionAnnotation.java is part of 'Kusor'.
+ * LocationUpdateAction.java is part of 'Kusor'.
  * 
  * 'Kusor' is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

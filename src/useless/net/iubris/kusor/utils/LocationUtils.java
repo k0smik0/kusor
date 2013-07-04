@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyleft 2013 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
- * LocationUpdatePackageName.java is part of 'Kusor'.
+ * LocationUtils.java is part of 'Kusor'.
  * 
  * 'Kusor' is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,16 +17,20 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor._inject.providers.annotations;
+package net.iubris.kusor.utils;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import android.location.Location;
 
-import javax.inject.Qualifier;
+import com.google.android.maps.GeoPoint;
 
-@Qualifier
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface LocationUpdatePackageName {}
+public class LocationUtils {
+	
+	public static GeoPoint locationToGeoPoint(Location location) {
+		return new GeoPoint( (int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
+	}
+
+	/*public static GeoPoint placeLocationToGeoPoint(PlaceLocation placeLocation) {
+		return new GeoPoint( (int)(placeLocation.getLatitude()*1E6), (int)(placeLocation.getLongitude()*1E6));
+	}*/
+
+}

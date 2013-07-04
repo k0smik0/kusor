@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyleft 2013 Massimiliano Leone - massimiliano.leone@iubris.net .
+  
+  sample.xml is part of 'Kusor'.
+  
+  'Kusor' is free software; you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation; either version 3 of the License, or
+  (at your option) any later version.
+  
+  'Kusor' is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+  
+  You should have received a copy of the GNU Lesser General Public License
+  along with 'Kusor' ; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/RelativeLayout1"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
+	
+	<TextView
+	    android:id="@+id/text_field_providers"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentTop="true"
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginTop="20dp"
+	    android:layout_marginBottom="10dp"
+	    android:maxLines="3"
+	    android:textIsSelectable="false"/>
+
+	<TextView
+		android:id="@+id/text_field_locations"
+		android:layout_width="fill_parent"
+		android:layout_height="240dp"
+		android:paddingLeft="10dp"
+		android:layout_centerInParent="true"
+		android:gravity="left"
+		android:scrollHorizontally="false"
+		android:singleLine="false"
+		android:maxLines = "15"
+		android:scrollbars = "vertical"
+		android:textIsSelectable="false"/>
+
+</RelativeLayout>

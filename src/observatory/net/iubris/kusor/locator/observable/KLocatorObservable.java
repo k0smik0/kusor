@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyleft 2012 Massimiliano Leone - massimiliano.leone@iubris.net .
+ * Copyleft 2013 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
  * KLocatorObservable.java is part of 'Kusor'.
  * 
@@ -29,7 +29,7 @@ import net.iubris.polaris.observatory.action.LocationNotificationAction;
 import net.iubris.polaris.observatory.observable.LocationObservable;
 import net.iubris.polaris.observatory.observable.LocatorObservableSyncDelegate;
 import net.iubris.polaris.observatory.observer.LocationObserver;
-import android.content.Context;
+import android.app.Application;
 import android.location.Location;
 import android.util.Log;
 
@@ -40,11 +40,11 @@ public class KLocatorObservable extends KLocator implements LocationObservable {
 	private final LocatorObservableSyncDelegate syncObservableDelegate;
 
 	@Inject	
-	public KLocatorObservable(Context context, Locator novodaLocator,
+	public KLocatorObservable(Application application, Locator novodaLocator,
 			@UpdatesInterval int updatesInterval,
 			@UpdatesDistance int updatesDistance,
 			LocatorObservableSyncDelegate syncObservableDelegate) {
-		super(context, novodaLocator, updatesInterval, updatesDistance);
+		super(application, novodaLocator, updatesInterval, updatesDistance);
 		this.syncObservableDelegate = syncObservableDelegate;
 	}
 	@Override

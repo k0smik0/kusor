@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyleft 2012 Massimiliano Leone - massimiliano.leone@iubris.net .
+ * Copyleft 2013 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
  * KusorModule.java is part of 'Kusor'.
  * 
