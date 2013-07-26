@@ -40,13 +40,12 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.widget.TextView;
 
 @ContentView(R.layout.sample)
 public class KusorActivity extends RoboActivity {
 	
-	private final String action = "net.iubris.kusor_sample."+KLocator.ACTION_UPDATED;
+	private final String action = "net.iubris.kusor_sample."+KLocator.ACTION_LOCATION_UPDATED;
 	
 	@InjectView(R.id.text_field_locations) TextView textViewLocations;
 	@InjectView(R.id.text_field_providers) TextView textViewProviders;
@@ -57,6 +56,7 @@ public class KusorActivity extends RoboActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+//Debug.startMethodTracing(Environment.getExternalStorageDirectory().getPath()+"/traces/kusor__startup");
 		super.onCreate(savedInstanceState);
 		serviceIntent = new Intent(this, KusorService.class);
 		startService( serviceIntent );
@@ -81,13 +81,27 @@ public class KusorActivity extends RoboActivity {
 	
 //	@SuppressWarnings("deprecation")
 	private void showLocation(String from, Location location) {
-		Log.d("KusorActivity:41",	from+location );
-		DecimalFormat df = new DecimalFormat("##.######");
+//		Log.d("KusorActivity:41",	from+location );
+		
 		long locationTime = location.getTime();
 //		Date date = new Date(locationTime);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss.SSS",Locale.getDefault());
 		String formattedDate = sdf.format( new Date(locationTime));
 //		.toLocaleString();
+		
+		long now = System.currentTimeMillis();
+		String formattedNow = sdf.format( new Date(now));
+		textViewLocations.setText(textViewLocations.getText()
+				+formattedNow+"\n");
+		
+		long diff = now - locationTime;
+		if (diff<60*1000) { // < 1 min
+			textViewLocations.setText(textViewLocations.getText()
+					+"a recent location!\n");
+//Debug.stopMethodTracing();
+		}
+		
+		DecimalFormat df = new DecimalFormat("##.######");
 		textViewLocations.setText(textViewLocations.getText()
 				+from
 				+"latitude:"+ df.format( location.getLatitude() )+", longitude:"+df.format( location.getLongitude() )+"\n"

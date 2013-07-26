@@ -43,7 +43,8 @@ public class LocatorProvider implements Provider<Locator> {
 	@Override
 	public Locator get() {
 		Locator novodaLocator = LocatorFactory.getInstance();
-		novodaLocator.prepare(context, locatorSettings);
+		novodaLocator.prepare(context, locatorSettings); // 1.0.6/1.0.8
+//		novodaLocator.prepare(context, locatorSettings, new ApiLevelDetector()); // 2.0-alpha
 		return novodaLocator;
 	}
 

@@ -49,7 +49,7 @@ import com.novoda.location.exception.NoProviderAvailable;
 @Singleton
 public class KLocator implements Locator {
 	
-	public final static String ACTION_UPDATED = "ACTION_LOCATION_UPDATED";
+	public final static String ACTION_LOCATION_UPDATED = "ACTION_LOCATION_UPDATED";
 	
 	private final com.novoda.location.Locator novodaLocator;
 //	private final Context applicationContext;	
@@ -104,7 +104,8 @@ public class KLocator implements Locator {
 		intentFilter.addAction(novodaLocator.getSettings().getUpdateAction());
 		applicationContext.registerReceiver(freshLocationReceiver, intentFilter);
 		try {			
-			novodaLocator.startLocationUpdates();			
+			novodaLocator.startLocationUpdates(); // 1.0.6-1.0.8
+//			novodaLocator.startActiveLocationUpdates(); // 2.0-alpha
 		} catch(NoProviderAvailable np) {
 			np.printStackTrace();
 		}
@@ -127,7 +128,7 @@ public class KLocator implements Locator {
 	public void stopLocationUpdates() {
 //Log.d("KLocator:95","stopping updates");
 		applicationContext.unregisterReceiver(freshLocationReceiver);
-		novodaLocator.stopLocationUpdates();		
+		novodaLocator.stopLocationUpdates();
 	}
 	
 	public BroadcastReceiver freshLocationReceiver = new BroadcastReceiver() {
@@ -137,8 +138,8 @@ public class KLocator implements Locator {
 			// store location
 			KLocator.this.onNewLocation( location );
 			// broadcast again
-			String action = context.getPackageName()+"."+ACTION_UPDATED;
-			context.sendBroadcast( new Intent(action) );
+			String action = context.getPackageName()+"."+ACTION_LOCATION_UPDATED;
+			context.sendBroadcast( new Intent(action) );		
 		}
 	};
 

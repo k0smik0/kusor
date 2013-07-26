@@ -40,7 +40,7 @@
 	<path id="classpath-main-common">
 		<path refid="classpath-android"/>
 		<fileset dir="${main-libs-dir}">
-			<include name="novocation-core-*.jar"/>
+			<include name="novocation-*.jar"/>
 			<include name="javax.inject.jar"/>
 			<include name="polaris-core.jar"/>
 		</fileset>

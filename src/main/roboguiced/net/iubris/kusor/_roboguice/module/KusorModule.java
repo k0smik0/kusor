@@ -40,8 +40,8 @@ public class KusorModule extends AbstractModule {
 	public KusorModule() {
 //		this.packageName = "net.iubris.kusor";
 //		this.updateAction = /*packageName+*/"ACTION_LOCATION_FRESH";
-		this.updatesInterval = 5*60*1000; // second
-		this.updatesDistance = 50; // meters
+		this.updatesInterval = 5*60*1000; // 5 second
+		this.updatesDistance = 50; // 50 meters
 		//internal = false;
 	}
 	/**
