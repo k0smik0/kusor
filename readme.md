@@ -34,3 +34,7 @@ So, the way was just one: some little refactor to novocation, et voilà ladies a
 - new fresh/best/etc location is again broadcasted when kusor receives it, so other components interested to it could get using their broadcastreceiver if they can/want not get it using "getLocation" main method.
 
 Check sample application, and you will see how it is more simpler than read here ;D
+
+--
+
+And oh, why this name? Because Kusor was the Phoenician god of navigation and inventions ;D
