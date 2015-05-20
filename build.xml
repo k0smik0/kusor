@@ -11,8 +11,11 @@
 	<property name="docurl" value="https://github.com/k0smik0/kusor"/>
 	
 	
-	<property name="android-path" value="/data/fucina/develop/usr/apps/android-sdk/" />
-	<property name="android-sdk-target-version" value="17"/>
+	<property environment="env" />
+	<condition property="sdk.dir" value="${env.ANDROID_HOME}">
+	  <isset property="env.ANDROID_HOME" />
+	</condition>
+	<property name="android-path" value="${sdk.dir}" />
 		
 	<property name="main-libs-dir" value="libs"/>
 
@@ -105,6 +108,21 @@
 	<target name="clean" depends="clean-main-common, clean-main-roboguiced, clean-4diane-common, clean-4diane-roboguiced"/>
 	-->
 	<target name="clean" depends="clean-main-common, clean-main-roboguiced"/>
+	
+	<target name="get-real-dependencies">
+    <get dest="${libs-dir}">
+      <url url="https://github.com/k0smik0/diane/blob/master/library/common/build/jars/diane-common.jar?raw=true"/>
+      <url url="https://github.com/k0smik0/epicurus/blob/master/build/jars/epicurus.jar?raw=true"/>
+      <url url="https://github.com/k0smik0/polaris/blob/master/build/jars/polaris-core.jar?raw=true"/>
+      <url url="https://github.com/k0smik0/polaris/blob/master/build/jars/polaris-observatory.jar?raw=true"/>
+      <url url="https://github.com/novoda/public-mvn-repo/blob/master/releases/com/novoda/location/novocation-core/1.0.8/novocation-core-1.0.8.jar?raw=true"/>
+    </get>
+    <get dest="${libs-dir}">
+      <url url="http://dependency-shot.googlecode.com/files/javax.inject.jar"/>
+      <url url="http://central.maven.org/maven2/org/sonatype/sisu/sisu-guice/3.2.0/sisu-guice-3.2.0.jar"/>
+      <url url="http://repo1.maven.org/maven2/org/roboguice/roboguice/2.0/roboguice-2.0.jar"/>
+    </get>
+  </target>
 	
 	<target name="compile-main-common">
 		<mkdir dir="${build.dir}/classes/main/common"/>
