@@ -41,7 +41,7 @@ import com.novoda.location.exception.NoProviderAvailable;
  * Using novocation locator, It retrieves a new location, which will be stored internally. <br/>
  * This new location can be consumed via getLocation(); <br/>
  * Be careful: behind the scene, all is asynchronous and getLocation() could return "null", at the beginning.<br/>
- * You can use a BroadcastReceiver to receive new location, registering it with IntentFilter action as "«appPackageName».ACTION_LOCATION_UPDATED",<br/>
+ * You can use a BroadcastReceiver to receive new location, registering it with IntentFilter action as "'appPackageName'.ACTION_LOCATION_UPDATED",<br/>
  * for example "com.example.ACTION_LOCATION_UPDATED" [ you can retrieve your appPackage using context.getPackageName() ]
  *  
  * @author Massimiliano Leone - k0smik0

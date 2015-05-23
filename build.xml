@@ -10,6 +10,8 @@
 	<property name="license.url" value="http://www.gnu.org/licenses/lgpl.txt"/>
 	<property name="docurl" value="https://github.com/k0smik0/kusor"/>
 	
+
+	<property name="android-sdk-target-version" value="22"/>
 	
 	<property environment="env" />
 	<condition property="sdk.dir" value="${env.ANDROID_HOME}">
