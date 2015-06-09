@@ -19,8 +19,8 @@
  ******************************************************************************/
 package net.iubris.kusor.locator;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
