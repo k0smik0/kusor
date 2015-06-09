@@ -20,6 +20,7 @@
 	<property name="android-path" value="${sdk.dir}" />
 		
 	<property name="main-libs-dir" value="libs"/>
+	<property name="libs-dir" value="libs"/>
 
 	<!-- don't touch below -->
 	
@@ -27,7 +28,11 @@
 	<property name="build.dir" value="build" />	
 	
 	<property name="jar-main-common.file" value="${build.dir}/jars/kusor-common.jar" />
-	<property name="jar-main-roboguiced.file" value="${build.dir}/jars/kusor-roboguiced.jar" />	
+	<property name="jar-roboguiced.file" value="${build.dir}/jars/kusor-roboguiced.jar" />
+	
+	<!--<property name="jar-tasks.file" value="${build.dir}/jars/kusor-tasks.jar" />-->
+	<!-- <property name="jar-tasks-roboguiced.file" value="${build.dir}/jars/kusor-tasks-roboguiced.jar" /> -->	
+	
 	<!--
 	<property name="jar-4diane-common.file" value="${build.dir}/jars/kusor4diane-common.jar" />
 	<property name="jar-4diane-roboguiced.file" value="${build.dir}/jars/kusor4diane-roboguiced.jar" />
@@ -47,11 +52,37 @@
 		<fileset dir="${main-libs-dir}">
 			<include name="novocation-*.jar"/>
 			<include name="javax.inject.jar"/>
+			<include name="*guice*.jar"/>
 			<include name="polaris-core.jar"/>
 		</fileset>
 	</path>
 	
-	<path id="classpath-main-roboguiced">
+	<path id="classpath-tasks">
+		<path refid="classpath-main-common"/>
+		<!--<fileset dir="${main-libs-dir}">
+	     <include name="enhanced*task*.jar"/>
+		</fileset>-->
+		<fileset dir="${build.dir}/jars">
+			<include name="kusor-common.jar"/>
+		</fileset>   
+	</path>
+	
+	<!-- <path id="classpath-tasks-roboguiced">
+	 <path refid="classpath-main-common"/>
+	 <fileset dir="${main-libs-dir}">
+			<include name="javax.inject.jar"/>
+			<include name="roboguice*.jar"/>
+			<include name="sisu-guice-3.0.3-no_aop.jar"/>
+		</fileset>
+	 <fileset dir="${main-libs-dir}">
+     <include name="roboenhanced*task*.jar"/>
+  </fileset>
+  <fileset dir="${build.dir}/jars">
+			<include name="kusor-common.jar"/>
+		</fileset>
+	</path> -->
+	
+	<path id="classpath-roboguiced">
 		<path refid="classpath-main-common"/>
 		<fileset dir="${main-libs-dir}">
 			<include name="javax.inject.jar"/>
@@ -61,64 +92,47 @@
 		<fileset dir="${build.dir}/jars">
 			<include name="kusor-common.jar"/>
 		</fileset>
-	</path>
-	
-	<!--
-	<path id="classpath-4diane-common">
-		<path refid="classpath-main-common"/>
-		<fileset dir="${main-libs-dir}">
-			<include name="epicurus.jar"/>
-			<include name="diane.jar"/>			
+		<!--<fileset dir="${build.dir}/jars">
+			<include name="kusor-tasks.jar"/>
 		</fileset>
-		<path location="${build.dir}/classes/main/common"/>
-	</path>
-	
-	<path id="classpath-4diane-roboguiced">
-		<path refid="classpath-4diane-common"/>
 		<fileset dir="${main-libs-dir}">
-			<include name="javax.inject.jar"/>
-			<include name="roboguice*.jar"/>
-			<include name="sisu-guice-3.0.3-no_aop.jar"/>
-		</fileset>
-		<path location="${build.dir}/classes/main/common"/>
-		<path location="${build.dir}/classes/4diane/common"/>
+			<include name="enhanced*task*.jar"/>
+		</fileset>-->
 	</path>
-	-->
 	
 	<target name="clean-main-common">
 		<delete dir="${build.dir}/classes/main/common"/>
 	</target>
-	<target name="clean-main-roboguiced">
-		<delete dir="${build.dir}/classes/main/roboguiced"/>
+	<!--<target name="clean-tasks">
+		<delete dir="${build.dir}/classes/tasks"/>
+	</target>-->
+	<!-- <target name="clean-tasks-roboguiced">
+		<delete dir="${build.dir}/classes/tasks/roboguiced"/>
+	</target> -->
+	<target name="clean-roboguiced">
+		<delete dir="${build.dir}/classes/roboguiced"/>
 	</target>
 	
 	<target name="clean-jars">
 		<delete file="${jar-main-common.file}"/>
-		<delete file="${jar-main-roboguiced.file}"/>
+		<!--<delete file="${jar-tasks.file}"/>-->
+		<delete file="${jar-roboguiced.file}"/>
 	</target>
 	
-	<!--
-  <target name="clean-4diane-common">
-  	<delete dir="${build.dir}/classes/4diane/common"/>
-  	<delete file="${jar-4diane-common.file}"/>
-  </target>
-	<target name="clean-4diane-roboguiced">
-  	<delete dir="${build.dir}/classes/4diane/roboguiced"/>
-  	<delete file="${jar-4diane-roboguiced.file}"/>
-  </target>
-		
-	<target name="clean" depends="clean-main-common, clean-main-roboguiced, clean-4diane-common, clean-4diane-roboguiced"/>
-	-->
-	<target name="clean" depends="clean-main-common, clean-main-roboguiced"/>
+	<target name="clean" depends="clean-main-common, clean-roboguiced"/>
 	
 	<target name="get-real-dependencies">
     <get dest="${libs-dir}">
       <url url="https://github.com/k0smik0/diane/blob/master/library/common/build/jars/diane-common.jar?raw=true"/>
-      <url url="https://github.com/k0smik0/epicurus/blob/master/build/jars/epicurus.jar?raw=true"/>
+      <url url="https://github.com/k0smik0/epicurus/blob/master/build/jar/epicurus.jar?raw=true"/>
       <url url="https://github.com/k0smik0/polaris/blob/master/build/jars/polaris-core.jar?raw=true"/>
       <url url="https://github.com/k0smik0/polaris/blob/master/build/jars/polaris-observatory.jar?raw=true"/>
       <url url="https://github.com/novoda/public-mvn-repo/blob/master/releases/com/novoda/location/novocation-core/1.0.8/novocation-core-1.0.8.jar?raw=true"/>
     </get>
+    <!--<get dest="${libs-dir}">
+        <url url="https://github.com/k0smik0/enhancedsafeasynctask/blob/master/vanilla/library/build/jars/enhancedsafeasynctask.jar?raw=true"/>
+        <url url="https://github.com/k0smik0/enhancedsafeasynctask/blob/master/roboguiced/library/build/jars/roboenhancedasynctask.jar?raw=true"/>
+    </get>-->
     <get dest="${libs-dir}">
       <url url="http://dependency-shot.googlecode.com/files/javax.inject.jar"/>
       <url url="http://central.maven.org/maven2/org/sonatype/sisu/sisu-guice/3.2.0/sisu-guice-3.2.0.jar"/>
@@ -136,34 +150,32 @@
 		</javac>
 	</target>
 	
-	<target name="compile-main-roboguiced">
-		<mkdir dir="${build.dir}/classes/main/roboguiced"/>
-		<javac destdir="${build.dir}/classes/main/roboguiced" includeantruntime="false">
-			<src path="${src.dir}/main/roboguiced"/>
-			<classpath refid="classpath-main-roboguiced"/>
+	<!--<target name="compile-tasks">
+		<mkdir dir="${build.dir}/classes/tasks"/>
+		<javac destdir="${build.dir}/classes/tasks" includeantruntime="false">
+			<src path="${src.dir}/tasks" />
+			<include name="**/*.java"/>
+			<classpath refid="classpath-tasks"/>
+		</javac>
+	</target>-->
+	
+	<!-- <target name="compile-tasks-roboguiced">
+		<mkdir dir="${build.dir}/classes/tasks/roboguiced"/>
+		<javac destdir="${build.dir}/classes/tasks/roboguiced" includeantruntime="false">
+			<src path="${src.dir}/tasks/roboguiced" />
+			<include name="**/*.java"/>
+			<classpath refid="classpath-tasks-roboguiced"/>
+		</javac>
+	</target> -->
+	
+	<target name="compile-roboguiced">
+		<mkdir dir="${build.dir}/classes/roboguiced"/>
+		<javac destdir="${build.dir}/classes/roboguiced" includeantruntime="false">
+			<src path="${src.dir}/roboguiced"/>
+			<classpath refid="classpath-roboguiced"/>
 		</javac>
 	</target>
 	
-	<!--
-	<target name="compile-4diane-common" depends="compile-main-common">
-		<mkdir dir="${build.dir}/classes/4diane/common"/>
-		<javac destdir="${build.dir}/classes/4diane/common" includeantruntime="false">
-			<src path="${src.dir}/kusor4diane/common" />
-			<include name="**/*.java"/>
-			<classpath refid="classpath-4diane-common"/>
-			
-		</javac>
-	</target>
-		
-	<target name="compile-4diane-roboguiced" depends="compile-4diane-common">
-		<mkdir dir="${build.dir}/classes/4diane/roboguiced"/>
-		<javac destdir="${build.dir}/classes/4diane/roboguiced" includeantruntime="false">
-			<src path="${src.dir}/kusor4diane/roboguiced" />
-			<include name="**/*.java"/>
-			<classpath refid="classpath-4diane-roboguiced"/>
-		</javac>
-	</target>
-	-->
 	<target name="jar-main-common" depends="clean-main-common, compile-main-common">
 		<mkdir dir="${build.dir}/jars/"/>
 		<jar destfile="${jar-main-common.file}" basedir="${build.dir}/classes/main/common">
@@ -180,9 +192,10 @@
 		</jar>
 		<antcall target="clean-main-common"/>
 	</target>
-	<target name="jar-main-roboguiced" depends="clean-main-roboguiced, compile-main-roboguiced">
+	
+	<!--<target name="jar-tasks" depends="clean-tasks, compile-tasks">
 		<mkdir dir="${build.dir}/jars/"/>
-		<jar destfile="${jar-main-roboguiced.file}" basedir="${build.dir}/classes/main/roboguiced">
+		<jar destfile="${jar-tasks.file}" basedir="${build.dir}/classes/tasks">
 			<manifest>
 				<attribute name="Built-By" value="${user}" />    
         <attribute name="Bundle-Name" value="${name}" />
@@ -194,12 +207,12 @@
 			</manifest>			
 			<metainf dir="." includes="${license.file}"/>
 		</jar>
-		<antcall target="clean-main-roboguiced"/>
-	</target>
-	<!--
-	<target name="jar-4diane-common" depends="clean-4diane-common, compile-4diane-common">
+		<antcall target="clean-tasks"/>
+	</target>-->
+	
+	<!-- <target name="jar-tasks-roboguiced" depends="clean-tasks-roboguiced, compile-tasks-roboguiced">
 		<mkdir dir="${build.dir}/jars/"/>
-		<jar destfile="${jar-4diane-common.file}" basedir="${build.dir}/classes/4diane/common">
+		<jar destfile="${jar-tasks-roboguiced.file}" basedir="${build.dir}/classes/tasks/roboguiced">
 			<manifest>
 				<attribute name="Built-By" value="${user}" />    
         <attribute name="Bundle-Name" value="${name}" />
@@ -211,10 +224,12 @@
 			</manifest>			
 			<metainf dir="." includes="${license.file}"/>
 		</jar>
-	</target>
-	<target name="jar-4diane-roboguiced" depends="clean-4diane-roboguiced, compile-4diane-roboguiced">
+		<antcall target="clean-tasks-roboguiced"/>
+	</target> -->
+	
+	<target name="jar-roboguiced" depends="clean-roboguiced, compile-roboguiced">
 		<mkdir dir="${build.dir}/jars/"/>
-		<jar destfile="${jar-4diane-roboguiced.file}" basedir="${build.dir}/classes/4diane/roboguiced">
+		<jar destfile="${jar-roboguiced.file}" basedir="${build.dir}/classes/roboguiced">
 			<manifest>
 				<attribute name="Built-By" value="${user}" />    
         <attribute name="Bundle-Name" value="${name}" />
@@ -226,9 +241,9 @@
 			</manifest>			
 			<metainf dir="." includes="${license.file}"/>
 		</jar>
+		<antcall target="clean-roboguiced"/>
 	</target>
-	<target name="jars" depends="jar-main-common, jar-main-roboguiced, jar-4diane-common, jar-4diane-roboguiced"/>
-	-->
-	<target name="jars" depends="jar-main-common, jar-main-roboguiced"/>
+	
+	<target name="jars" depends="jar-main-common, jar-roboguiced"/>
 
 </project>

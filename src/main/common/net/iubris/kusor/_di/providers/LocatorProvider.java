@@ -17,33 +17,35 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor._inject.providers;
+package net.iubris.kusor._di.providers;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import roboguice.inject.ContextSingleton;
+import android.app.Application;
 import android.content.Context;
 
 import com.novoda.location.Locator;
 import com.novoda.location.LocatorFactory;
 import com.novoda.location.LocatorSettings;
 
-//@ContextSingleton
+@ContextSingleton
 public class LocatorProvider implements Provider<Locator> {
 	
 	private final LocatorSettings locatorSettings;
-	private Context context;
+	private final Context applicationContext;
 	
 	@Inject
-	public LocatorProvider(LocatorSettings locatorSettings, Context context) {
+	public LocatorProvider(LocatorSettings locatorSettings, Application applicationContext) {
 		this.locatorSettings = locatorSettings;
-		this.context = context;
+		this.applicationContext = applicationContext;
 	}
 
 	@Override
 	public Locator get() {
 		Locator novodaLocator = LocatorFactory.getInstance();
-		novodaLocator.prepare(context, locatorSettings); // 1.0.6/1.0.8
+		novodaLocator.prepare(applicationContext, locatorSettings); // 1.0.6/1.0.8
 //		novodaLocator.prepare(context, locatorSettings, new ApiLevelDetector()); // 2.0-alpha
 		return novodaLocator;
 	}

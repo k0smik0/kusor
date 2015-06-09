@@ -19,10 +19,6 @@
  ******************************************************************************/
 package net.iubris.kusor_sample.service;
 
-import javax.inject.Inject;
-
-import net.iubris.kusor.locator.KLocator;
-
 import roboguice.service.RoboService;
 import android.content.Intent;
 import android.os.Handler;
@@ -30,7 +26,7 @@ import android.os.IBinder;
 
 public class KusorService extends RoboService {
 
-	@Inject KLocator kLocator;
+//	@Inject KLocator kLocator;
 	protected Handler threadHandler;
 	protected Handler handler;
 	
@@ -41,13 +37,13 @@ public class KusorService extends RoboService {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		kLocator.startLocationUpdates();
+//		kLocator.startLocationUpdates();
 		return 0;
 	}
 	
 	@Override
 	public void onDestroy() {
-		kLocator.stopLocationUpdates();
+//		kLocator.stopLocationUpdates();
 		super.onDestroy();
 	}
 }

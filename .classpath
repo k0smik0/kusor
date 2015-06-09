@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="net/iubris/kusor/utils/LocationUtils.java|net/iubris/kusor/locator/IKLocator.java|net/iubris/kusor/locator/KLocator_bak.java" kind="src" path="src/main/common"/>
-	<classpathentry excluding="net/iubris/kusor/locator/RoboKLocator.java|net/iubris/kusor/_roboguice/module/exception/KusorModuleException.java" kind="src" path="src/main/roboguiced"/>
-	<classpathentry kind="src" path="src/observatory"/>
+	<classpathentry excluding="net/iubris/kusor/utils/LocationUtils.java|net/iubris/kusor/locator/IKLocator.java|net/iubris/kusor/locator/KLocator_bak.java|net/iubris/kusor/tasks/resume/freshlocation/exceptions/LocationException.java" kind="src" path="src/main/common"/>
+	<classpathentry kind="src" path="src/roboguiced"/>
+	<classpathentry excluding="net/iubris/kusor/locator/observable/" kind="src" path="src/observatory"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="src/sample"/>
-	<classpathentry excluding="net/iubris/kusor/LocationObservableProvider.java|net/iubris/kusor/observatory/observable/LocationObservable.java|net/iubris/kusor/observatory/observer/LocationObserver.java|net/iubris/kusor/provider/LocationProvider.java|net/iubris/kusor/updater/LocationUpdater.java|net/iubris/kusor/|net/iubris/kusor/observatory/observable/|net/iubris/kusor/observatory/observer/|net/iubris/kusor/provider/|net/iubris/kusor/updater/" kind="src" path="src/moved_to_polaris"/>
-	<classpathentry excluding="IKLocator.java|KLocator_bak.java|net/iubris/kusor/utils/LocationUtils.java" kind="src" path="src/useless"/>
+	<classpathentry kind="src" path="src/new"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>

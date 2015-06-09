@@ -19,14 +19,15 @@
  ******************************************************************************/
 package net.iubris.kusor.locator;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import net.iubris.kusor._inject.locator.annotations.UpdatesDistance;
-import net.iubris.kusor._inject.locator.annotations.UpdatesInterval;
+import net.iubris.kusor._di.locator.annotations.UpdatesDistance;
+import net.iubris.kusor._di.locator.annotations.UpdatesInterval;
+import net.iubris.kusor._di.providers.annotations.LocationUpdaterPackageName;
 import net.iubris.polaris.locator.Locator;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -34,6 +35,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+
 import com.novoda.location.exception.NoProviderAvailable;
 
 /**
@@ -49,29 +51,35 @@ import com.novoda.location.exception.NoProviderAvailable;
 @Singleton
 public class KLocator implements Locator {
 	
-	public final static String ACTION_LOCATION_UPDATED = "ACTION_LOCATION_UPDATED";
+//	public final static String ACTION_LOCATION_UPDATED = "ACTION_LOCATION_UPDATED";
 	
 	private final com.novoda.location.Locator novodaLocator;
 //	private final Context applicationContext;	
 	private final Application applicationContext;	
 	private final int updatesInterval;
 	private final int updatesDistance;
+	private final CountDownLatch latch;
+	private final String packageName;
+	
+	protected final static int WAIT = 3;
 
 	private Location location;
-	private CountDownLatch latch;
-	
-	protected static int WAIT = 4; 
+	private boolean started;
 
 	@Inject
 	public KLocator(Application /*Context*/ application,
 			com.novoda.location.Locator novodaLocator,
+			@LocationUpdaterPackageName String packageName,
 			@UpdatesInterval int updatesInterval,
 			@UpdatesDistance int updatesDistance) {
 		this.applicationContext = application;
 		this.novodaLocator = novodaLocator;
+		this.packageName = packageName;
 		this.updatesDistance = updatesDistance;
 		this.updatesInterval = updatesInterval;
 		this.latch = new CountDownLatch(1);
+		
+//Ln.d(packageName);
 	}
 	
 	@Override
@@ -99,15 +107,21 @@ public class KLocator implements Locator {
 	
 	@Override
 	public void startLocationUpdates() {
-//Log.d("KLocator:97","starting updates");
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(novodaLocator.getSettings().getUpdateAction());
-		applicationContext.registerReceiver(freshLocationReceiver, intentFilter);
-		try {			
-			novodaLocator.startLocationUpdates(); // 1.0.6-1.0.8
-//			novodaLocator.startActiveLocationUpdates(); // 2.0-alpha
-		} catch(NoProviderAvailable np) {
-			np.printStackTrace();
+		if (!started) {
+//			Log.d("KLocator:97","starting updates");
+			IntentFilter intentFilter = new IntentFilter();
+//			Ln.d(novodaLocator.getSettings().getUpdateAction());
+			intentFilter.addAction(novodaLocator.getSettings().getUpdateAction());
+			try {
+				applicationContext.registerReceiver(freshLocationReceiver, intentFilter);
+				novodaLocator.startLocationUpdates(); // 1.0.6-1.0.8
+//				novodaLocator.startActiveLocationUpdates(); // 2.0-alpha
+			} catch(NoProviderAvailable np) {
+				np.printStackTrace();
+			} catch(IllegalArgumentException e) {
+				// for "pending intent must be targeted to package"
+			}
+			started = true;
 		}
 	}
 	
@@ -127,8 +141,11 @@ public class KLocator implements Locator {
 	@Override
 	public void stopLocationUpdates() {
 //Log.d("KLocator:95","stopping updates");
-		applicationContext.unregisterReceiver(freshLocationReceiver);
-		novodaLocator.stopLocationUpdates();
+		if (started) {
+			applicationContext.unregisterReceiver(freshLocationReceiver);
+			novodaLocator.stopLocationUpdates();
+			started = false; 
+		}
 	}
 	
 	public BroadcastReceiver freshLocationReceiver = new BroadcastReceiver() {
@@ -138,7 +155,12 @@ public class KLocator implements Locator {
 			// store location
 			KLocator.this.onNewLocation( location );
 			// broadcast again
-			String action = context.getPackageName()+"."+ACTION_LOCATION_UPDATED;
+			String action = 
+//					context.getPackageName()
+					packageName
+					+"."
+//					+ACTION_LOCATION_UPDATED;
+					+novodaLocator.getSettings().getUpdateAction();
 			context.sendBroadcast( new Intent(action) );		
 		}
 	};

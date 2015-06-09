@@ -17,18 +17,21 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor._inject.providers;
+package net.iubris.kusor._di.providers;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import net.iubris.kusor._inject.locator.annotations.UpdatesDistance;
-import net.iubris.kusor._inject.locator.annotations.UpdatesInterval;
-import net.iubris.kusor._inject.providers.annotations.LocationUpdateAction;
+import net.iubris.kusor._di.locator.annotations.UpdatesDistance;
+import net.iubris.kusor._di.locator.annotations.UpdatesInterval;
+import net.iubris.kusor._di.providers.annotations.LocationUpdateAction;
+import net.iubris.kusor._di.providers.annotations.LocationUpdaterPackageName;
+import roboguice.inject.ContextSingleton;
 import android.content.Context;
+
 import com.novoda.location.LocatorSettings;
 
-//@ContextSingleton
+@ContextSingleton
 public class LocatorSettingsProvider implements Provider<LocatorSettings> {
 
 	/*private final String locationUpdateAction;
@@ -42,23 +45,22 @@ public class LocatorSettingsProvider implements Provider<LocatorSettings> {
 	@Inject
 	protected LocatorSettingsProvider(
 			@LocationUpdateAction String locationUpdateAction,
-//			@LocationUpdatePackageName String packageName,
+			@LocationUpdaterPackageName String packageName,
 			@UpdatesInterval int updatesInterval, 
 			@UpdatesDistance int updatesDistance
 			,Context context) {
 		/*this.locationUpdateAction = locationUpdateAction;
-//		this.packageName = packageName;
+		this.packageName = packageName;
 		this.updatesInterval = updatesInterval;
 		this.updatesDistance = updatesDistance;
 		this.context = context;*/
 		
-//Log.d("LocatorSettingsProvider:54", locationUpdateAction+" "+/*packageName+*/" "+context.getPackageName());
+//Log.d("LocatorSettingsProvider:57", locationUpdateAction+" "+packageName+" "+context.getPackageName());
 
-//Log.d("LocatorSettingsProvider:58",context.getPackageName());
+//Log.d("LocatorSettingsProvider:59",context.getPackageName());
 		locationSettings =
-		//		new LocatorSettings(packageName, locationUpdateAction);
-
-				new LocatorSettings(context.getPackageName(), locationUpdateAction); // 1.0.6, 1.0.8
+				new LocatorSettings(packageName, locationUpdateAction);
+//				new LocatorSettings(context.getPackageName(), locationUpdateAction); // 1.0.6, 1.0.8
 //				new LocatorSettings(locationUpdateAction); // 2.0-alpha//
 
 		//		new LocatorSettings("com.novoda.location", "ACTIVE_LOCATION_UPDATE_ACTION");

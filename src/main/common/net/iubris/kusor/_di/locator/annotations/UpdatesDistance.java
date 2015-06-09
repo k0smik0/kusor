@@ -17,7 +17,7 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor._inject.locator.annotations;
+package net.iubris.kusor._di.locator.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

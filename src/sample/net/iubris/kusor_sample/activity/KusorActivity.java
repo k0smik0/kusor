@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import net.iubris.kusor.locator.KLocator;
 import net.iubris.kusor_sample.R;
 import net.iubris.kusor_sample.service.KusorService;
+import net.iubris.polaris.locator.Locator;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -45,12 +46,12 @@ import android.widget.TextView;
 @ContentView(R.layout.sample)
 public class KusorActivity extends RoboActivity {
 	
-	private final String action = "net.iubris.kusor_sample."+KLocator.ACTION_LOCATION_UPDATED;
+	private final String action = getPackageName()+KLocator.ACTION_LOCATION_UPDATED_SUFFIX;
 	
 	@InjectView(R.id.text_field_locations) TextView textViewLocations;
 	@InjectView(R.id.text_field_providers) TextView textViewProviders;
 	
-	@Inject KLocator kLocator;
+	@Inject Locator locator;
 
 	private Intent serviceIntent;
 
@@ -72,7 +73,10 @@ public class KusorActivity extends RoboActivity {
 		public void onReceive(Context context, Intent intent) {
 //			if (intent.getAction().equalsIgnoreCase("net.iubris.kusor.ACTION_LOCATION_UPDATED")){
 //				KLocator kLocator = RoboGuice.getInjector(context).getInstance(KLocator.class);
-				Location location = kLocator.getLocation();
+			
+				Location location = 
+						locator
+						.getLocation();
 //				showLocation("onReceive[KusorActivity:35]:\n",location);
 				showLocation("onReceive:\n",location);
 //			}
@@ -116,9 +120,11 @@ public class KusorActivity extends RoboActivity {
 	protected void onResume() {
 		super.onResume();
 		
+		locator.startLocationUpdates();
+		
 		textViewProviders.setText(
-			"is gps enabled: "+ kLocator.isGpsProviderEnabled()+"\n"
-			+"is network enabled: "+ kLocator.isNetworkProviderEnabled()
+			"is gps enabled: "+ ((KLocator)locator).isGpsProviderEnabled()+"\n"
+			+"is network enabled: "+ ((KLocator)locator).isNetworkProviderEnabled()
 		);
 		
 		// or you can wait for a location not null, using a while, but this blocks the ui, so use asynctask!
@@ -126,10 +132,10 @@ public class KusorActivity extends RoboActivity {
 			@Override
 			public Location call() throws Exception {
 				
-				while (kLocator.getLocation()==null) {
+				while (locator.getLocation()==null) {
 					Thread.sleep(10);
 				}
-				return kLocator.getLocation();
+				return locator.getLocation();
 			}
 			protected void onSuccess(Location location) throws Exception {
 				showLocation("onResume:\n",location);
@@ -140,6 +146,7 @@ public class KusorActivity extends RoboActivity {
 	@Override
 	protected void onDestroy() {
 		unregisterReceiver(receiver);
+		locator.stopLocationUpdates();
 		stopService( serviceIntent  );
 		super.onDestroy();
 	}

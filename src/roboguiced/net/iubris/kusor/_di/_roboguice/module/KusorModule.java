@@ -17,13 +17,14 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor._roboguice.module;
+package net.iubris.kusor._di._roboguice.module;
 
-import net.iubris.kusor._inject.locator.annotations.UpdatesDistance;
-import net.iubris.kusor._inject.locator.annotations.UpdatesInterval;
-import net.iubris.kusor._inject.providers.LocatorProvider;
-import net.iubris.kusor._inject.providers.LocatorSettingsProvider;
-import net.iubris.kusor._inject.providers.annotations.LocationUpdateAction;
+import net.iubris.kusor._di.locator.annotations.UpdatesDistance;
+import net.iubris.kusor._di.locator.annotations.UpdatesInterval;
+import net.iubris.kusor._di.providers.LocatorProvider;
+import net.iubris.kusor._di.providers.LocatorSettingsProvider;
+import net.iubris.kusor._di.providers.annotations.LocationUpdateAction;
+import net.iubris.kusor._di.providers.annotations.LocationUpdaterPackageName;
 
 import com.google.inject.AbstractModule;
 import com.novoda.location.Locator;
@@ -31,15 +32,19 @@ import com.novoda.location.LocatorSettings;
 
 public class KusorModule extends AbstractModule {
 
-//	private final String packageName;
-	private final String updateAction = "ACTION_LOCATION_FRESH";
+	private final String packageName;
+	private final String updateAction; 
+//			"ACTION_LOCATION_FRESH";
+//			"ACTION_LOCATION_UPDATED";
+			
+	
 	private final int updatesInterval;
 	private final int updatesDistance;
 	//private final boolean internal;
 	
 	public KusorModule() {
-//		this.packageName = "net.iubris.kusor";
-//		this.updateAction = /*packageName+*/"ACTION_LOCATION_FRESH";
+		this.packageName = "net.iubris.kusor";
+		this.updateAction = packageName+""+net.iubris.polaris.locator.Locator.ACTION_LOCATION_UPDATED_SUFFIX;
 		this.updatesInterval = 5*60*1000; // 5 second
 		this.updatesDistance = 50; // 50 meters
 		//internal = false;
@@ -50,9 +55,10 @@ public class KusorModule extends AbstractModule {
 	 * @param updatesInterval 	an integer (milliseconds)
 	 * @param updatesDistance 	an integer (meters)
 	 */
-	public KusorModule(/*String packageName, String updateAction,*/ int updatesInterval, int updatesDistance) {
-//		this.packageName = packageName;
+	public KusorModule(String packageName,/* String updateAction,*/ int updatesInterval, int updatesDistance) {
+		this.packageName = packageName;
 //		this.updateAction = updateAction.toUpperCase(Locale.getDefault());
+		this.updateAction = packageName+""+net.iubris.polaris.locator.Locator.ACTION_LOCATION_UPDATED_SUFFIX;
 		this.updatesInterval = updatesInterval;
 		this.updatesDistance = updatesDistance;
 	}
@@ -60,8 +66,8 @@ public class KusorModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		
-//		bindConstant().annotatedWith(LocationUpdatePackageName.class).to(packageName);
-//		Log.d("KusorModule:66","packageName: "+packageName);
+		bindConstant().annotatedWith(LocationUpdaterPackageName.class).to(packageName);
+//Log.d("KusorModule:66","packageName: "+packageName);
 		bindConstant().annotatedWith(LocationUpdateAction.class).to(updateAction);
 		bindConstant().annotatedWith(UpdatesInterval.class).to(updatesInterval);
 		bindConstant().annotatedWith(UpdatesDistance.class).to(updatesDistance);
@@ -69,6 +75,28 @@ public class KusorModule extends AbstractModule {
 		bind(LocatorSettings.class).toProvider(LocatorSettingsProvider.class);
 		bind(Locator.class).toProvider(LocatorProvider.class);
 //		bind(KLocator.class).asEagerSingleton();
-		//bind(LocationObservableProvider.class).to(KLocator.class);	
+		//bind(LocationObservableProvider.class).to(KLocator.class);
+		
+//		bindLocationNullAllWrongString(); // provides an english message
+//		bindLocationNullEnableGPSString(); // provides an english message
+		
+//		bind(GetFreshLocationTask.class).toProvider(GetFreshLocationTaskProvider.class);
 	}
+	
+//	/**
+//	 * binding needed for {@link GetFreshLocationTask}<br/>
+//	 * default: in english
+//	 */
+//	protected void bindLocationNullAllWrongString() {
+//		bind(String.class).annotatedWith(LocationNullAllWrongString.class).toInstance("location is null, something was wrong.");
+//	}
+//	/**
+//	 * binding needed for {@link GetFreshLocationTask}<br/>
+//	 * default: do nothing 
+//	 */
+//	protected void bindLocationNullEnableGPSString() {
+//		bind(String.class).annotatedWith(LocationNullEnableGPSString.class).toInstance("location is null, you could enable your GPS.");
+//	}
+	
+	
 }

@@ -5,3 +5,5 @@ polaris-core.jar
 polaris-observatory.jar
 roboguice/2.0/roboguice-2.0.jar
 roboguice/2.0/sisu-guice-3.0.3-no_aop.jar
+roboenhancedasynctask.jar 
+enhancedsafeasynctask.jar

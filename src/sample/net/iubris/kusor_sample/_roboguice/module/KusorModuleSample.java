@@ -19,7 +19,9 @@
  ******************************************************************************/
 package net.iubris.kusor_sample._roboguice.module;
 
-import net.iubris.kusor._roboguice.module.KusorModule;
+import net.iubris.kusor._di._roboguice.module.KusorModule;
+import net.iubris.kusor.locator.KLocator;
+import net.iubris.polaris.locator.Locator;
 
 /*******************************************************************************
  * Copyleft 2012 Massimiliano Leone - massimiliano.leone@iubris.net .
@@ -45,6 +47,8 @@ public class KusorModuleSample extends KusorModule {
 	
 	@Override
 	protected void configure() {
-		install( new KusorModule(/*"net.iubris.kusor_sample", "ACTION_LOCATION_FRESH",*/ 5*60*1000, 50));
+		install( new KusorModule("net.iubris.kusor_sample",/* "ACTION_LOCATION_FRESH",*/ 5*60*1000, 50));
+		
+		bind(Locator.class).to(KLocator.class);
 	}
 }

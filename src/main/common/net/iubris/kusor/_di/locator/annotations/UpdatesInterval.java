@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyleft 2013 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
- * LocationUpdatePackageName.java is part of 'Kusor'.
+ * UpdatesInterval.java is part of 'Kusor'.
  * 
  * 'Kusor' is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor._inject.providers.annotations;
+package net.iubris.kusor._di.locator.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,4 +29,4 @@ import javax.inject.Qualifier;
 @Qualifier
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LocationUpdatePackageName {}
+public @interface UpdatesInterval {}

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyleft 2013 Massimiliano Leone - massimiliano.leone@iubris.net .
  * 
- * LocationObservableProvider.java is part of 'Kusor'.
+ * LocationUpdatePackageName.java is part of 'Kusor'.
  * 
  * 'Kusor' is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,9 +17,16 @@
  * along with 'Kusor' ; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  ******************************************************************************/
-package net.iubris.kusor;
+package net.iubris.kusor._di.providers.annotations;
 
-import net.iubris.kusor.observatory.observable.LocationObservable;
-import net.iubris.kusor.provider.LocationProvider;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface LocationObservableProvider extends LocationObservable, LocationProvider{}
+import javax.inject.Qualifier;
+
+@Qualifier
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface LocationUpdaterPackageName {}
