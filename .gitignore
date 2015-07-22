@@ -5,3 +5,4 @@ no_libs
 src/moved_to_polaris
 src/useless
 libs/*.jar 
+/.apt_generated/

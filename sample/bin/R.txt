@@ -1,0 +1,6 @@
+int array roboguice_modules 0x7f040000
+int drawable ic_launcher 0x7f020000
+int id RelativeLayout1 0x7f050000
+int id text_field_locations 0x7f050002
+int id text_field_providers 0x7f050001
+int layout sample 0x7f030000

@@ -1,13 +1,12 @@
+## kusor sample
+
+### update: kusor(1) is obsolete, now you should use kusor2 - it is also in 'library' dir, but you should yourself update this sample project using new library (it's just a: copy the jar from build/jar in libs and update manifest file, removing useless novoda sections)
+
+-----
+
+just build the apk, and using
+
 #Kusor
-
-### update: 
- - kusor (v1) library is obsolete, now you should use kusor2 (in 'library' directory anyhow) - it still implements Polaris (see below), so the method signatures are the same
- - no 'kusor2-roboguiced.jar' is provided now, nor \*guice dependecies are required: if you want run KLocatorSLT (the KLocator from Kusor2) as a singleton, and/or you would a sort of a construction wrapper, just implements a Provider<KLocatorSLT> \*guice-compliant, and you are in business.
- 
---------------
---------------
-
-
 
 Kusor is Android component providing an efficient geolocalization engine.  
 
@@ -46,7 +45,7 @@ Check sample application, and you will see how it is more simpler than read here
   
 Kusor is splitted in 2 jars: the main/core, providing business classes, and -roboguiced one, providing a RoboGuice based module with (abstract) template method you could use to binding annotations/classes to your custom values; example:
 <pre>
-    install( new PolarisModule() {
+	install( new PolarisModule() {
 		@Override
 		protected void bindLocationUpdater() {
 			bind(LocationUpdater.class).to(KLocator.class);

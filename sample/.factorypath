@@ -1,0 +1,6 @@
+<factorypath>
+    <factorypathentry kind="EXTJAR" id="/data/fucina/develop/home/k0smik0/workspace_android/_libs/roboguice/3.0/commons-collections-3.2.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="/data/fucina/develop/home/k0smik0/workspace_android/_libs/roboguice/3.0/commons-lang-2.2.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="/data/fucina/develop/home/k0smik0/workspace_android/_libs/roboguice/3.0/roboblender-3.0.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="/data/fucina/develop/home/k0smik0/workspace_android/_libs/roboguice/3.0/velocity-1.6.2.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>
