@@ -1,1 +1,2 @@
+smart-location-lib.jar
 polaris-core.jar

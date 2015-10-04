@@ -23,6 +23,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import net.iubris.polaris.locator.core.Locator;
+import net.iubris.polaris.locator.core.updater.OnLocationUpdatedCallback;
 import _roboguice.util.Ln;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -199,6 +200,13 @@ Ln.d("location: "+location);
 	}
 	public boolean isNetworkProviderEnabled() {
 		return novodaLocator.isNetworkProviderEnabled();
+	}
+
+	@Override
+	public void startLocationUpdates(OnLocationUpdatedCallback arg0) {
+		Location location = getLocation();
+		if ((location!=null) && (arg0!=null))
+			arg0.onLocationUpdated( getLocation() );		
 	}
 
 }

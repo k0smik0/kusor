@@ -6,23 +6,29 @@ import io.nlopez.smartlocation.SmartLocation.LocationControl;
 import io.nlopez.smartlocation.location.config.LocationParams;
 import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesWithFallbackProvider;
 import net.iubris.polaris.locator.core.Locator;
+import net.iubris.polaris.locator.core.exceptions.LocationNullException;
+import net.iubris.polaris.locator.core.updater.OnLocationUpdatedCallback;
 import net.iubris.polaris.locator.utils.LocationStrategiesUtils;
 import android.content.Context;
 import android.location.Location;
 //import android.util.Log;
+import android.util.Log;
 
 public class KLocatorSLL implements Locator {
 	
+	private static final int MAX_RETRY = 3;
 	private final LocationControl locationController;
 	private final OnLocationUpdatedListener onLocationUpdatedListener = new OnLocationUpdatedListener() {
 		@Override
 		public void onLocationUpdated(Location location) {
 //			Log.d("KLocatorSLL:19","new location found: "+location);
-			KLocatorSLL.this.location = location;
+			KLocatorSLL.this.locationCurrent = location;
 		}
 	};
 	
-	protected Location location;
+	
+	
+	protected Location locationCurrent;
 	private int minimumTimeThreshold;
 	private int minimumDistanceThreshold;
 
@@ -32,33 +38,49 @@ public class KLocatorSLL implements Locator {
 		locationController = SmartLocation.with(context).location()
 				.config(LocationParams.NAVIGATION)
 				.provider( new LocationGooglePlayServicesWithFallbackProvider(context) );
-		// sure?
-//		locationController.config(LocationParams.NAVIGATION);
 	}
 
 	@Override
-	public Location getLocation() {
-		if (location==null) {
-			Location lastLocation = locationController.getLastLocation();
-//			Log.d("KLocatorSLL:40","current location is null, returning lastLocation: "+lastLocation);
-			location = lastLocation;
+	public synchronized Location getLocation() throws LocationNullException {
+		Location locationLast = locationController.getLastLocation();
+		if (locationLast==null && locationCurrent==null) {
+			locationController.stop();
+			locationController.start(onLocationUpdatedListener);
 			
-			if (lastLocation==null) {
-				locationController.stop();
-				locationController.start(onLocationUpdatedListener);
-			}				
-			return location;
+			throw new LocationNullException();
 		}
 		
-		Location lastLocation = locationController.getLastLocation();
-		if (LocationStrategiesUtils.isLocationBetter(location, lastLocation, minimumTimeThreshold, minimumDistanceThreshold)) {
-//			Log.d("KLocatorSLL:47", "current location is better, returning: "+location);
-			return location;
-		} else {
-//			Log.d("KLocatorSLL:50", "current location is worst, returning lastLocation: "+location);
-			location = lastLocation;
-			return location;
+		if (locationLast!=null && locationCurrent==null) {
+//			Log.d("KLocatorSLL:40","current location is null, returning lastLocation: "+lastLocation);
+			
+			locationCurrent = locationLast;
+			return locationCurrent;
 		}
+		
+		if (!isLocationBetter(locationLast)) {
+//			Log.d("KLocatorSLL:60", "current location is worst, returning lastLocation: "+location);
+			Log.d("KLocatorSLL:60", "new location ("+locationLast+") is worst, retrying/blocking...");
+			
+			locationLast = locationController.getLastLocation();
+			int sleepCount = 0;
+			while(!isLocationBetter(locationLast) && sleepCount<MAX_RETRY) {
+				try { Thread.sleep(500); } catch (InterruptedException e) {}
+				locationLast = locationController.getLastLocation();
+				Log.d("KLocatorSLL", "trying new location: "+locationLast);
+				sleepCount++;
+			}
+			if (!isLocationBetter(locationLast) && sleepCount<MAX_RETRY) {
+				Log.d("KLocatorSLL:71", "new location ("+locationLast+") is however worst, but we return it anyway...");
+			}
+		} else {
+			Log.d("KLocatorSLL:74", System.currentTimeMillis()+": current location is better, returning: "+locationCurrent);
+		}
+		locationCurrent = locationLast;
+		return locationCurrent;
+	}
+	
+	public boolean isLocationBetter(Location locationLast) {
+		return (LocationStrategiesUtils.isLocationBetter(locationLast, this.locationCurrent, minimumTimeThreshold, minimumDistanceThreshold));
 	}
 
 	@Override
@@ -78,13 +100,23 @@ public class KLocatorSLL implements Locator {
 			@Override
 			public void onLocationUpdated(Location location) {
 //				Log.d("KLocatorSLL:73","new location found: "+location);
-				KLocatorSLL.this.location = location;
+				KLocatorSLL.this.locationCurrent = location;
 			}
 		} );
-				
-		
 //		Location location = locationController.getLastLocation();
 //		Log.d("KLocatorSLL:81","location: "+location);
+	}
+	
+	@Override
+	public void startLocationUpdates(final OnLocationUpdatedCallback onLocationUpdatedCallback) {
+		locationController.start( new OnLocationUpdatedListener() {
+			@Override
+			public void onLocationUpdated(Location location) {
+//				Log.d("KLocatorSLL:73","new location found: "+location);
+				KLocatorSLL.this.locationCurrent = location;
+				onLocationUpdatedCallback.onLocationUpdated(location);
+			}
+		});
 	}
 
 	@Override

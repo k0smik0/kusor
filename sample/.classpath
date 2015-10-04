@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="net/iubris/kusor/utils/LocationUtils.java|net/iubris/kusor/locator/IKLocator.java|net/iubris/kusor/locator/KLocator_bak.java|net/iubris/kusor/tasks/resume/freshlocation/exceptions/LocationException.java" kind="src" path="src/main/common"/>
-	<classpathentry kind="src" path="src/roboguiced"/>
-	<classpathentry excluding="net/iubris/kusor/locator/observable/" kind="src" path="src/observatory"/>
-	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="src/sample"/>
 	<classpathentry excluding="net/iubris/kusor/news/KLocator2.java" kind="src" path="src/new"/>
+	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
