@@ -8,6 +8,7 @@ import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesWith
 import net.iubris.polaris.locator.core.Locator;
 import net.iubris.polaris.locator.core.exceptions.LocationNullException;
 import net.iubris.polaris.locator.core.updater.OnLocationUpdatedCallback;
+import net.iubris.polaris.locator.core.updater.OnNoNewLocationTimeoutCallback;
 import net.iubris.polaris.locator.utils.LocationStrategiesUtils;
 import android.content.Context;
 import android.location.Location;
@@ -79,7 +80,7 @@ public class KLocatorSLL implements Locator {
 		return locationCurrent;
 	}
 	
-	public boolean isLocationBetter(Location locationLast) {
+	private boolean isLocationBetter(Location locationLast) {
 		return (LocationStrategiesUtils.isLocationBetter(locationLast, this.locationCurrent, minimumTimeThreshold, minimumDistanceThreshold));
 	}
 
@@ -117,6 +118,12 @@ public class KLocatorSLL implements Locator {
 				onLocationUpdatedCallback.onLocationUpdated(location);
 			}
 		});
+	}
+	@Override
+	public void startLocationUpdates(OnLocationUpdatedCallback onLocationUpdatedCallback,
+			OnNoNewLocationTimeoutCallback onNoNewLocationTimeoutCallback) {
+		startLocationUpdates(onLocationUpdatedCallback);
+		onNoNewLocationTimeoutCallback.onNoNewLocation(locationCurrent);
 	}
 
 	@Override
