@@ -1,6 +1,6 @@
 #Kusor
 
-### update: 
+### update (1): 
  - kusor (v1) library is obsolete, now you should use kusor2 (in 'library' directory anyhow) - it still implements Polaris (see below), so the method signatures are the same
  - no 'kusor2-roboguiced.jar' is provided now, nor \*guice dependecies are required: if you want run KLocatorSLT (the KLocator from Kusor2) as a singleton, and/or you would a sort of a construction wrapper, just implements a Provider<KLocatorSLT> \*guice-compliant, and you are in business.
  
@@ -27,16 +27,21 @@ Unfortunately, his code was useless for reusing, too much full of static variabl
 
 So, with many endurance, I started to refactor that code, in order to obtain a stand-alone library.  
 
-During work I found, casually, a similar project, [ignition location](https://github.com/mttkay/ignition/tree/master/ignition-location), which attempt my same target.  
+During work I found, casually, a similar project, [ignition location](https://github.com/mttkay/ignition/tree/master/ignition-location), which attempts my same target.  
 Unfortunately (2), it allows to get a fresh location only within an Activity, not from Service: technically, it uses AOP and principal annotation @IgnitedLocation works only within an Activity.  
 I tried to modify project, so that works also within Service, but my poor knowledge of AOP stopped me, with no interesting result.  
 
 So, I reprised Meier's code refactoring, until, again casually, I found Novoda's novocation project.  
-According to readme, it is heavily inspired to ignition location, but this time there is no AOP behind the scene: it is entirely pure OOP ;D. And, above all, it worked very well, and its code was almost as I would have done
+According to readme, it is heavily inspired to ignition location, but this time there is no AOP behind the scene: it is entirely pure OOP ;D. And, above all, it worked very well, and its code was almost as I would have done.
 
 
-So, the way was just one: some little refactor to novocation, et voilà ladies and gentlemen, this is Kusor.
+So, the way was just one: some little refactor to novocation, et voilà ladies and gentlemen, this is Kusor.    
 
+#### update (2)
+new kusor release (kusor2) doesn't use anymore novocation as engine library, since novocation is not compliant to LocationService - so, novocation has been replaced by [smart-location-lib](https://github.com/mrmans0n/smart-location-lib)   
+  
+   <br/> 
+  
 ####Main features are:
 - Factory initializations and engine start/stop are wrapped in a single class
 - It is dependency injection based, with 2 mandatory parameters handled by IoC container: RoboGuice, in provided example, but you could use your favourite one (Dagger? Needle? Your custom one?)
