@@ -58,6 +58,10 @@ public class KLocatorSLL implements Locator {
 			return locationCurrent;
 		}
 		
+		if (locationLast==null && locationCurrent!=null) {
+			return locationCurrent;
+		}
+		
 		if (!isLocationBetter(locationLast)) {
 //			Log.d("KLocatorSLL:60", "current location is worst, returning lastLocation: "+location);
 			Log.d("KLocatorSLL:60", "new location ("+locationLast+") is worst, retrying/blocking...");
